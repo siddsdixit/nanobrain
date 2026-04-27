@@ -10,7 +10,7 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/siddsdixit/nanobrain/ci.yml?branch=main&label=tests)](https://github.com/siddsdixit/nanobrain/actions)
 ![Bash](https://img.shields.io/badge/bash-3.2%2B-blue)
 ![Node](https://img.shields.io/badge/node-18%2B-339933)
-![Version](https://img.shields.io/badge/version-v0.1.0-brightgreen)
+![Version](https://img.shields.io/badge/version-v0.2.0-brightgreen)
 [![Stars](https://img.shields.io/github/stars/siddsdixit/nanobrain?style=social)](https://github.com/siddsdixit/nanobrain)
 
 > **Anthropic gave you Memory inside Claude. Google's giving you Memory inside Gemini. OpenAI's giving you Memory inside ChatGPT.**

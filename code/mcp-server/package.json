@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "MCP server exposing the brain as native tools to Claude Code, Cursor, Codex, Gemini.",
   "type": "module",
   "main": "index.js",

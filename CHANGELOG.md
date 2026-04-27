@@ -2,6 +2,26 @@
 
 All notable changes to nanobrain are documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org).
 
+## [0.2.0] — 2026-04-27
+
+Schema completeness, public CLI surface, marketing landing page.
+
+### Added
+
+- **`.cursorrules`** — first-class activation template at repo root, alongside `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`. Boot sequence, capture guidance for Cursor sessions, voice and style defaults, hard rules.
+- **`bin/nanobrain`** — public CLI surface. `nanobrain status / who <q> / list <type> / show <type> <slug>`. Reuses the same parsing and listing logic as the MCP server. Vendor-neutral.
+- **`site/`** — marketing landing page for nanobrain.dev. Brick-aesthetic title rendered via shared glyph data with the Remotion video, three-loop "How it works" diagram (capture / use / maintain), three-layer "Architecture" panel mirroring Karpathy's LLM Wiki pattern, embedded demo GIF, heritage credits, compact maintainer card.
+- **README hero demo** — Remotion-rendered `assets/demo.gif` (1.1 MB, 22s) replaces the previous static fallback. Brick-aesthetic title, unified theme, generic persona for projection.
+
+### Changed
+
+- **`COMPATIBILITY.md`** — schema list now reflects the four shipped activation files. Removed the old "for older Cursor versions, copy AGENTS.md to .cursorrules" workaround in favor of symlinking the new shipped template.
+- **`code/mcp-server/package.json`** — version bump 0.1.0 → 0.2.0 to align with `index.js`.
+
+### Fixed
+
+- **`.gitignore`** — now excludes `.claude/` (Claude Code project-local session state).
+
 ## [0.1.0] — 2026-04-27
 
 Hardened release. Framework production-ready, MCP fully implemented, 66 smoke tests gate every commit.

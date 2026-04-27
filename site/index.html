@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>nanobrain · your second brain in markdown</title>
+<meta name="description" content="The portable second brain for AI agents. Markdown + git. Works with Claude, Codex, Gemini, Cursor, Aider. Vendor-neutral. Yours forever." />
+<meta property="og:title" content="nanobrain · your second brain in markdown" />
+<meta property="og:description" content="The portable second brain for AI agents. Markdown + git. Vendor-neutral. Yours forever." />
+<meta property="og:image" content="https://github.com/siddsdixit/nanobrain/raw/main/assets/demo.gif" />
+<meta property="og:url" content="https://nanobrain.dev" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a1614'/%3E%3Crect x='6' y='6' width='8' height='8' fill='%23E08263'/%3E%3Crect x='18' y='6' width='8' height='8' fill='%23E08263'/%3E%3Crect x='6' y='18' width='20' height='8' fill='%23E08263'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+<header class="nav">
+  <div class="brand">
+    <span class="brand-mark"></span>
+    <span>nanobrain</span>
+  </div>
+  <nav class="links">
+    <a href="#how">How it works</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#install">Install</a>
+    <a href="#heritage">Heritage</a>
+    <a href="#about">About</a>
+    <a href="https://github.com/siddsdixit/nanobrain" class="btn-ghost">GitHub →</a>
+  </nav>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="welcome">
+    <span class="star">✶</span>
+    Welcome to the <b>nanobrain</b> research preview.
+  </div>
+
+  <div class="brick-stage" id="brickStage">
+    <div class="brick-row" data-word="NANO" data-cell="28"></div>
+    <div class="brick-row" data-word="BRAIN" data-cell="22"></div>
+  </div>
+  <span class="visually-hidden">nanobrain</span>
+
+  <p class="kicker">Second brain · Markdown · Vendor-neutral</p>
+
+  <p class="lede">
+    Anthropic gave you Memory inside Claude. Google's giving it inside Gemini.
+    OpenAI's giving it inside ChatGPT.<br />
+    Each one locks you in.
+  </p>
+  <p class="lede strong">
+    nanobrain is the markdown + git equivalent. Yours forever, portable across every agent.
+  </p>
+
+  <div class="cta-row">
+    <a class="btn-primary" href="#install">Install in 30 seconds →</a>
+    <a class="btn-secondary" href="https://github.com/siddsdixit/nanobrain">★ Star on GitHub</a>
+  </div>
+
+  <figure class="demo-frame">
+    <div class="demo-chrome">
+      <span class="dot dot-r"></span>
+      <span class="dot dot-y"></span>
+      <span class="dot dot-g"></span>
+      <span class="demo-title">~/my-brain · nanobrain demo</span>
+    </div>
+    <img src="https://github.com/siddsdixit/nanobrain/raw/main/assets/demo.gif" alt="nanobrain CLI demo. status, who, list, show, works with" loading="eager" />
+  </figure>
+</section>
+
+<section id="why" class="why">
+  <h2>Why nanobrain</h2>
+  <p class="section-lede">Your context outlives any single AI vendor.</p>
+  <div class="why-grid">
+    <article>
+      <div class="why-num">01</div>
+      <h3>Plain markdown</h3>
+      <p>No DB. No schema. Your brain is human-readable forever, even if every AI vendor disappears tomorrow. Open it in any editor. Diff it in any tool. It's just files.</p>
+    </article>
+    <article>
+      <div class="why-num">02</div>
+      <h3>Vendor-neutral</h3>
+      <p>One brain. Every agent. Switch from Claude to Codex to Gemini without losing context. Built for the multi-agent decade, when each tool tries to lock your memory inside itself.</p>
+    </article>
+    <article>
+      <div class="why-num">03</div>
+      <h3>Captures itself</h3>
+      <p>A throttled stop hook distills each session, redacts secrets, commits + pushes to your git remote. Your brain compounds in the background while you ship.</p>
+    </article>
+  </div>
+</section>
+
+<section id="how" class="how">
+  <h2>How it works</h2>
+  <p class="section-lede">Three loops on one brain. The capture loop fills it. The use loop reads it. The maintain loop keeps it healthy.</p>
+
+  <div class="loops">
+
+    <article class="loop">
+      <div class="loop-head">
+        <span class="loop-num">01</span>
+        <h3>Capture loop</h3>
+        <span class="loop-trigger">on session end</span>
+      </div>
+      <div class="loop-body">
+        <div class="loop-flow">
+          <div class="loop-step">
+            <div class="loop-step-title">Sources</div>
+            <div class="loop-chips">
+              <span class="src-chip">Claude</span>
+              <span class="src-chip">Cursor</span>
+              <span class="src-chip">Codex</span>
+              <span class="src-chip">Gemini</span>
+              <span class="src-chip">Aider</span>
+              <span class="src-chip src-aux">Granola</span>
+              <span class="src-chip src-aux">Repos</span>
+              <span class="src-chip src-aux">+ via _TEMPLATE</span>
+            </div>
+          </div>
+          <div class="loop-arrow">→</div>
+          <div class="loop-step">
+            <div class="loop-step-title">Stop hook</div>
+            <div class="loop-step-meta"><code>code/hooks/capture.sh</code><br>throttled · runs locally</div>
+          </div>
+          <div class="loop-arrow">→</div>
+          <div class="loop-step">
+            <div class="loop-step-title">Redact</div>
+            <div class="loop-step-meta"><code>code/hooks/redact.sh</code><br>scrub secrets pre-write</div>
+          </div>
+          <div class="loop-arrow">→</div>
+          <div class="loop-step">
+            <div class="loop-step-title">Distill</div>
+            <div class="loop-step-meta">summarize · categorize · auto-link with <code>[[wikilinks]]</code></div>
+          </div>
+          <div class="loop-arrow">→</div>
+          <div class="loop-step loop-step-key">
+            <div class="loop-step-title">brain/*.md</div>
+            <div class="loop-step-meta">git commit + push · vendor-neutral</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="loop">
+      <div class="loop-head">
+        <span class="loop-num">02</span>
+        <h3>Use loop</h3>
+        <span class="loop-trigger">every agent query</span>
+      </div>
+      <div class="loop-body">
+        <p class="loop-desc">An MCP server exposes the brain to any LLM. Claude Code, Cursor, Codex, Gemini, and Aider all hit the same 7 tools.</p>
+        <div class="tool-grid">
+          <div class="tool"><code>brain_search</code><span>full-text + tag</span></div>
+          <div class="tool"><code>brain_get_entity</code><span>fetch by name</span></div>
+          <div class="tool"><code>brain_list_by_type</code><span>person · project · decision · concept</span></div>
+          <div class="tool"><code>brain_relationships</code><span>backlinks + outlinks</span></div>
+          <div class="tool"><code>brain_query_graph</code><span>traverse the wiki graph</span></div>
+          <div class="tool"><code>brain_add_to_inbox</code><span>append-only writes</span></div>
+          <div class="tool"><code>brain_status</code><span>brain health metadata</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="loop">
+      <div class="loop-head">
+        <span class="loop-num">03</span>
+        <h3>Maintain loop</h3>
+        <span class="loop-trigger">cron + on-demand</span>
+      </div>
+      <div class="loop-body">
+        <p class="loop-desc">A markdown wiki without maintenance rots. nanobrain ships nine slash commands. Two of them run on schedule via macOS LaunchD plists.</p>
+        <div class="cmd-grid">
+          <div class="cmd"><code>/brain-compact</code><span>monthly cleanup · cron</span></div>
+          <div class="cmd"><code>/brain-evolve</code><span>self-improvement · monthly cron</span></div>
+          <div class="cmd"><code>/brain-redact</code><span>scrub secrets retroactively</span></div>
+          <div class="cmd"><code>/brain-checkpoint</code><span>snapshot before risky ops</span></div>
+          <div class="cmd"><code>/brain-hash</code><span>verify integrity</span></div>
+          <div class="cmd"><code>/brain-graph</code><span>explore the link graph</span></div>
+          <div class="cmd"><code>/brain-spawn</code><span>build agents from brain context</span></div>
+          <div class="cmd"><code>/brain-save</code><span>force-save mid-session</span></div>
+          <div class="cmd"><code>/brain</code><span>base command · search, who, list, show</span></div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section id="architecture" class="architecture">
+  <h2>Architecture</h2>
+  <p class="section-lede">Three layers. Borrowed from <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">Karpathy's LLM Wiki pattern</a>. Each layer has one job.</p>
+
+  <div class="layers">
+    <article class="layer layer-3">
+      <div class="layer-tag">Layer 3 · the rules</div>
+      <h3>Schema</h3>
+      <p class="layer-desc">One file per agent runtime, all referencing the same brain. Tells the agent how to read, edit, and maintain the wiki.</p>
+      <div class="layer-files">
+        <code>CLAUDE.md</code><code>AGENTS.md</code><code>GEMINI.md</code>
+      </div>
+    </article>
+
+    <div class="layer-arrow">↓</div>
+
+    <article class="layer layer-2">
+      <div class="layer-tag">Layer 2 · what the LLM owns</div>
+      <h3>Wiki</h3>
+      <p class="layer-desc">Markdown files the agent reads, edits, cross-links with <code class="inline-code">[[wikilinks]]</code>. Top-level indexes plus per-entity folders. Lives in your git repo.</p>
+      <div class="layer-files">
+        <code>self.md</code><code>projects.md</code><code>people.md</code><code>decisions.md</code><code>person/</code><code>project/</code><code>decision/</code><code>concept/</code>
+      </div>
+      <div class="layer-extra">
+        <span class="layer-extra-label">Wikilinks in the example brain:</span>
+        <code class="link-sample">[[Jane Doe]]</code>
+        <code class="link-sample">[[Ledger]]</code>
+        <code class="link-sample">[[Sam Park]]</code>
+        <code class="link-sample">[[2026-04-15 — vendor pick]]</code>
+      </div>
+    </article>
+
+    <div class="layer-arrow">↓</div>
+
+    <article class="layer layer-1">
+      <div class="layer-tag">Layer 1 · ground truth</div>
+      <h3>Sources</h3>
+      <p class="layer-desc">Raw, immutable. The agent reads but never modifies. Each source has its own ingest + distill recipe. Adding a source is a folder.</p>
+      <div class="layer-files">
+        <code>data/claude/INBOX.md</code><code>data/granola/INBOX.md</code><code>data/repos/INBOX.md</code>
+      </div>
+      <div class="layer-extra">
+        <span class="layer-extra-label">Add your own:</span>
+        <code class="link-sample">code/sources/_TEMPLATE/</code>
+      </div>
+    </article>
+  </div>
+
+  <p class="arch-note">
+    RAG retrieves on every query. The LLM Wiki <b>accumulates</b>. nanobrain is the pipeline that fills it. Real <code class="inline-code">[[wikilinks]]</code>, real backlinks, real cross-references. Just markdown.
+  </p>
+</section>
+
+<section id="install" class="install">
+  <h2>Install in 30 seconds</h2>
+  <p class="section-lede">No accounts. No SaaS. Just markdown in your git repo.</p>
+  <div class="terminal">
+    <div class="terminal-chrome">
+      <span class="dot dot-r"></span>
+      <span class="dot dot-y"></span>
+      <span class="dot dot-g"></span>
+      <span class="terminal-title">~/my-brain</span>
+    </div>
+    <pre class="terminal-body"><span class="prompt">$</span> <span class="cmd">git clone https://github.com/siddsdixit/nanobrain.git ~/nanobrain</span>
+<span class="prompt">$</span> <span class="cmd">~/nanobrain/install.sh ~/my-brain</span>
+
+  <span class="ok">✓</span> stop hook installed
+  <span class="ok">✓</span> MCP server registered <span class="dim">(7 tools)</span>
+  <span class="ok">✓</span> slash commands available
+  <span class="ok">✓</span> first commit pushed
+
+<span class="prompt">$</span> <span class="cmd">claude</span>   <span class="comment"># your agent now has a second brain</span></pre>
+  </div>
+</section>
+
+<section id="works-with" class="works-with">
+  <h2>Works with</h2>
+  <p class="section-lede">One brain. Every agent. Add yours via a 50-line wrapper.</p>
+  <div class="agent-row">
+    <span class="chip">CLAUDE</span>
+    <span class="chip">CODEX</span>
+    <span class="chip">GEMINI</span>
+    <span class="chip">CURSOR</span>
+    <span class="chip">AIDER</span>
+  </div>
+</section>
+
+<section id="heritage" class="heritage">
+  <h2>Heritage</h2>
+  <p class="section-lede">Standing on the shoulders of an honest giant.</p>
+
+  <figure class="quote">
+    <blockquote>
+      &ldquo;A wiki is a beautiful primitive. LLMs make it 100&times; more powerful.
+      The bookkeeping that humans abandon (cross-references, summaries, contradictions)
+      is exactly the labor LLMs don't get bored doing.&rdquo;
+    </blockquote>
+    <figcaption>
+      <span class="cite-name">Andrej Karpathy</span>
+      <span class="cite-meta">on the <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">LLM Wiki pattern</a></span>
+    </figcaption>
+  </figure>
+
+  <div class="heritage-grid">
+    <article class="heritage-card">
+      <div class="heritage-tag">2025</div>
+      <h3><a href="https://github.com/karpathy/nanochat">nanochat</a></h3>
+      <p class="heritage-quote">&ldquo;the best ChatGPT $100 can buy&rdquo;</p>
+      <p>Karpathy showed an entire ChatGPT pipeline could fit in a single hackable repo. <b>The "nano" ethos: small things that compose forever.</b></p>
+    </article>
+
+    <article class="heritage-card">
+      <div class="heritage-tag">2025</div>
+      <h3><a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">LLM Wiki</a></h3>
+      <p class="heritage-quote">&ldquo;knowledge that compounds, not retrieves&rdquo;</p>
+      <p>The three-layer pattern: <b>raw sources → markdown wiki → agent schema</b>. RAG retrieves; the wiki accumulates. The LLM owns the wiki, edits it, keeps it current.</p>
+    </article>
+
+    <article class="heritage-card highlight">
+      <div class="heritage-tag">2026</div>
+      <h3>nanobrain</h3>
+      <p class="heritage-quote">&ldquo;the capture layer for the LLM Wiki&rdquo;</p>
+      <p>Karpathy gave us the pattern. <b>nanobrain ships the infrastructure</b>: auto-capture from every agent session, secret redaction, git commit + push, MCP read/write. The wiki maintains itself in the background.</p>
+    </article>
+  </div>
+
+  <p class="heritage-note">
+    nanobrain is not the LLM Wiki. nanobrain is what fills it. Across every agent you use.
+  </p>
+</section>
+
+<section id="about" class="about">
+  <h2>About</h2>
+
+  <article class="profile-card compact">
+    <div class="profile-avatar">
+      <img src="https://github.com/siddsdixit.png?size=240" alt="Sid Dixit" width="96" height="96" loading="lazy" />
+    </div>
+    <div class="profile-name-block">
+      <h3>Sid Dixit</h3>
+      <p class="profile-role">
+        CTO &amp; CIO at <a href="https://www.itradenetwork.com">iTradeNetwork</a>
+        <span class="profile-pill">NASDAQ:ROP, a Roper Technologies company</span>
+      </p>
+      <p class="profile-role-sub">San Francisco Bay Area</p>
+    </div>
+
+    <div class="profile-links">
+      <a class="profile-link" href="https://www.linkedin.com/in/siddsdixit/">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 01.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
+        LinkedIn
+      </a>
+      <a class="profile-link" href="mailto:siddixit.work@gmail.com">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M.05 3.555A2 2 0 012 2h12a2 2 0 011.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 002 14h12a2 2 0 001.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/></svg>
+        siddixit.work@gmail.com
+      </a>
+      <a class="profile-link" href="tel:+18589529503">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.654 1.328a.678.678 0 00-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 004.168 6.608 17.569 17.569 0 006.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 00-.063-1.015l-2.307-1.794a.678.678 0 00-.58-.122l-2.19.547a1.745 1.745 0 01-1.657-.459L5.482 8.062a1.745 1.745 0 01-.46-1.657l.548-2.19a.678.678 0 00-.122-.58L3.654 1.328z"/></svg>
+        858-952-9503
+      </a>
+      <a class="profile-link" href="https://onemillion.build">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zM3.5 7.5a.5.5 0 010-1h9a.5.5 0 010 1h-9zM5 4a.5.5 0 01.5-.5h5a.5.5 0 010 1h-5A.5.5 0 015 4zm.5 6a.5.5 0 000 1h5a.5.5 0 000-1h-5z"/></svg>
+        onemillion.build
+      </a>
+      <a class="profile-link" href="https://github.com/siddsdixit">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        @siddsdixit
+      </a>
+    </div>
+  </article>
+</section>
+
+<section class="closing">
+  <h2>Try without installing</h2>
+  <p class="section-lede">The starter brain has Alex, nanobrain, ledger, and 3 real-shaped decisions baked in.</p>
+  <div class="terminal narrow">
+    <div class="terminal-chrome">
+      <span class="dot dot-r"></span>
+      <span class="dot dot-y"></span>
+      <span class="dot dot-g"></span>
+      <span class="terminal-title">try.nanobrain</span>
+    </div>
+    <pre class="terminal-body"><span class="prompt">$</span> <span class="cmd">BRAIN_DIR=examples/starter-brain</span>
+<span class="prompt">$</span> <span class="cmd">node code/mcp/server.js</span></pre>
+  </div>
+  <div class="cta-row" style="margin-top:36px">
+    <a class="btn-primary" href="https://github.com/siddsdixit/nanobrain">Get started on GitHub →</a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <span>nanobrain</span>
+      </div>
+      <div class="foot-tag">Markdown. Git. Vendor-neutral. Forever.</div>
+    </div>
+
+    <div class="footer-col">
+      <div class="foot-heading">Project</div>
+      <div class="foot-links-col">
+        <a href="https://github.com/siddsdixit/nanobrain">GitHub</a>
+        <a href="https://github.com/siddsdixit/nanobrain/issues">Issues &amp; PRs</a>
+        <a href="https://github.com/siddsdixit/nanobrain/blob/main/LICENSE">MIT License</a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <div class="foot-heading">Heritage</div>
+      <div class="foot-links-col">
+        <a href="https://github.com/karpathy/nanochat">karpathy/nanochat</a>
+        <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">LLM Wiki gist</a>
+      </div>
+    </div>
+
+    <div class="footer-col built-by">
+      <div class="foot-heading">Built by</div>
+      <a href="https://github.com/siddsdixit" class="builder-card">
+        <span class="builder-handle">@siddsdixit</span>
+        <span class="builder-meta">San Francisco · ML &amp; tools</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer-fineprint">
+    <span>© 2026 nanobrain · MIT</span>
+    <span>Heritage: <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">Karpathy's LLM Wiki</a> · <a href="https://github.com/karpathy/nanochat">nanochat</a></span>
+  </div>
+</footer>
+
+<script>
+// 5x7 brick glyphs. Same data as the Remotion video.
+const G = {
+  A:[[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,1],[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1]],
+  B:[[1,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,0]],
+  I:[[1,1,1,1,1],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[1,1,1,1,1]],
+  N:[[1,0,0,0,1],[1,1,0,0,1],[1,1,0,0,1],[1,0,1,0,1],[1,0,0,1,1],[1,0,0,1,1],[1,0,0,0,1]],
+  O:[[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+  R:[[1,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,0],[1,1,0,0,0],[1,0,1,0,0],[1,0,0,1,1]],
+};
+const COLS=5, ROWS=7, GAP=12;
+function buildWord(word, cell){
+  const pitch = COLS*cell + GAP;
+  const w = word.length*pitch - GAP;
+  const h = ROWS*cell;
+  let svg = `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">`;
+  const brick = cell - 4;
+  const trace = Math.max(2, Math.round(cell*0.16));
+  word.split("").forEach((ch, li)=>{
+    const grid = G[ch]; if(!grid) return;
+    const lx = li*pitch;
+    for(let r=0;r<ROWS;r++){
+      for(let c=0;c<COLS;c++){
+        if(!grid[r][c]) continue;
+        const x = lx + c*cell, y = r*cell;
+        // trace (offset behind)
+        svg += `<rect x="${x+trace}" y="${y+trace}" width="${brick}" height="${brick}" rx="2" fill="none" stroke="#7A4429" stroke-width="1.5" opacity="0.85"/>`;
+        // brick face
+        svg += `<rect x="${x}" y="${y}" width="${brick}" height="${brick}" rx="2" fill="#E08263"/>`;
+        // top highlight
+        svg += `<rect x="${x}" y="${y}" width="${brick}" height="2" rx="1" fill="#F4A586" opacity="0.7"/>`;
+        // bottom shade
+        svg += `<rect x="${x}" y="${y+brick-2}" width="${brick}" height="2" rx="1" fill="rgba(0,0,0,0.18)"/>`;
+      }
+    }
+  });
+  svg += "</svg>";
+  return svg;
+}
+document.querySelectorAll(".brick-row").forEach(el=>{
+  const word = el.dataset.word;
+  const cell = parseInt(el.dataset.cell, 10) || 26;
+  el.innerHTML = buildWord(word, cell);
+});
+</script>
+
+</body>
+</html>
