@@ -30,26 +30,27 @@ export const Vignette = () => (
   />
 );
 
-// Animated grid/dot pattern background.
+// Warm dark charcoal background — same surface as the terminal so they bleed together.
+// Subtle dot grid drift adds life without breaking the unified plane.
 export const GridBackground = () => {
   const frame = useCurrentFrame();
-  const drift = (frame * 0.3) % 80;
+  const drift = (frame * 0.25) % 80;
 
   return (
     <AbsoluteFill
       style={{
         background:
-          "radial-gradient(ellipse at top, #2a0e4a 0%, #110424 45%, #050010 100%)",
+          "radial-gradient(ellipse at center, #221c18 0%, #1a1614 55%, #100c0a 100%)",
       }}
     >
       <AbsoluteFill
         style={{
           backgroundImage:
-            "radial-gradient(rgba(255,138,112,0.18) 1px, transparent 1px)",
+            "radial-gradient(rgba(224,130,99,0.10) 1px, transparent 1px)",
           backgroundSize: "80px 80px",
           backgroundPositionX: `${drift}px`,
           backgroundPositionY: `${drift}px`,
-          opacity: 0.7,
+          opacity: 0.6,
         }}
       />
     </AbsoluteFill>

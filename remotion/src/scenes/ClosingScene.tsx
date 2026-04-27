@@ -1,21 +1,11 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, interpolate, Easing } from "remotion";
-import { loadFont as loadBungee } from "@remotion/google-fonts/Bungee";
-
-const { fontFamily: BUNGEE } = loadBungee();
+import { BrickWord } from "../components/BrickText";
 
 const AGENTS = ["CLAUDE", "CODEX", "GEMINI", "CURSOR", "AIDER"];
-const CORAL = "#FF8A70";
-const CORAL_GLOW = "rgba(255, 138, 112, 0.45)";
 
 export const ClosingScene = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-
-  const headerScale = spring({
-    frame,
-    fps,
-    config: { damping: 14, stiffness: 110 },
-  });
 
   return (
     <AbsoluteFill
@@ -23,21 +13,10 @@ export const ClosingScene = () => {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        gap: 36,
+        gap: 60,
       }}
     >
-      <div
-        style={{
-          fontFamily: BUNGEE,
-          fontSize: 72,
-          color: CORAL,
-          letterSpacing: 4,
-          transform: `scale(${headerScale})`,
-          textShadow: `0 0 40px ${CORAL_GLOW}`,
-        }}
-      >
-        WORKS WITH
-      </div>
+      <BrickWord text="WORKS WITH" cell={20} letterGap={12} startDelay={0} />
 
       <div
         style={{
@@ -50,7 +29,7 @@ export const ClosingScene = () => {
       >
         {AGENTS.map((name, i) => {
           const appear = spring({
-            frame: frame - 18 - i * 6,
+            frame: frame - 36 - i * 6,
             fps,
             config: { damping: 14, stiffness: 130 },
           });
@@ -58,15 +37,16 @@ export const ClosingScene = () => {
             <div
               key={name}
               style={{
-                fontFamily: BUNGEE,
-                fontSize: 28,
-                color: "#0f1419",
-                background: "#e6edf3",
-                padding: "14px 24px",
-                borderRadius: 8,
+                fontFamily: "ui-monospace, 'JetBrains Mono', SF Mono, Menlo, monospace",
+                fontSize: 22,
+                fontWeight: 700,
+                color: "#1a1614",
+                background: "#f0e0d0",
+                padding: "12px 22px",
+                borderRadius: 6,
                 letterSpacing: 2,
                 transform: `scale(${appear})`,
-                boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
+                boxShadow: "0 8px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(224,130,99,0.3)",
               }}
             >
               {name}
@@ -77,12 +57,11 @@ export const ClosingScene = () => {
 
       <div
         style={{
-          marginTop: 30,
           fontFamily: "ui-monospace, 'JetBrains Mono', monospace",
           fontSize: 22,
-          color: "#9aa4b1",
+          color: "#9a8676",
           letterSpacing: 1,
-          opacity: interpolate(frame, [50, 70], [0, 1], {
+          opacity: interpolate(frame, [60, 80], [0, 1], {
             extrapolateRight: "clamp",
             easing: Easing.out(Easing.cubic),
           }),

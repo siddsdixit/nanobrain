@@ -1,30 +1,29 @@
 import { Typewriter, RevealLines } from "../components/Typewriter";
 
-const COMMAND = "nanobrain show person sid";
+const COMMAND = "nanobrain show person alex";
 const OUTPUT = [
   "",
-  "person/sid",
+  "person/alex",
   "",
-  "  name              Sid Dixit",
-  "  role              Indie engineer · founder",
-  "  github            @siddsdixit",
-  "  shipping          nanobrain (this) · ledger",
-  "  stack             TypeScript · Vercel · Fly.io",
+  "  name              Alex Rivera",
+  "  role              maintainer",
+  "  github            @alex",
+  "  shipping          nanobrain · shipping-tracker",
+  "  stack             TypeScript · Postgres · Fly.io",
   "  status            active",
   "",
-  "# Sid Dixit",
+  "# Alex Rivera",
   "",
-  "Builds developer tools that compound.",
-  "Maintainer of nanobrain. Open issues at",
-  "github.com/siddsdixit/nanobrain.",
+  "Indie developer. Ships small tools.",
+  "Maintainer of nanobrain.",
 ];
 
 export const ShowScene = () => {
   const cmdEnd = Math.ceil(COMMAND.length / 0.8) + 6;
   return (
     <>
-      <span style={{ color: "#79c0ff", fontWeight: 700 }}>$ </span>
-      <Typewriter text={COMMAND} style={{ color: "#e6edf3" }} />
+      <span style={{ color: "#E08263", fontWeight: 700 }}>$ </span>
+      <Typewriter text={COMMAND} style={{ color: "#f0e0d0" }} />
       <RevealLines lines={OUTPUT} startFrame={cmdEnd} framesPerLine={4} />
     </>
   );

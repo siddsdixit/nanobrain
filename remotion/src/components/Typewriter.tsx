@@ -24,7 +24,7 @@ export const Typewriter = ({
   return (
     <span style={style}>
       {typed}
-      {showCursor && <span style={{ background: "#c9d1d9", color: "#0f1419" }}>▌</span>}
+      {showCursor && <span style={{ background: "#e6dccb", color: "#1a1614" }}>▌</span>}
     </span>
   );
 };

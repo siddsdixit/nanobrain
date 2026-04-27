@@ -16,8 +16,8 @@ export const StatusScene = () => {
   const cmdEnd = Math.ceil(COMMAND.length / 0.8) + 6;
   return (
     <>
-      <span style={{ color: "#79c0ff", fontWeight: 700 }}>$ </span>
-      <Typewriter text={COMMAND} style={{ color: "#e6edf3" }} />
+      <span style={{ color: "#E08263", fontWeight: 700 }}>$ </span>
+      <Typewriter text={COMMAND} style={{ color: "#f0e0d0" }} />
       <RevealLines lines={OUTPUT} startFrame={cmdEnd} framesPerLine={4} />
     </>
   );

@@ -25,10 +25,10 @@ export const Terminal = ({ children }: { children: ReactNode }) => {
       <div
         style={{
           width: 1080,
-          background: "#0f1419",
+          background: "#1a1614",
           borderRadius: 14,
           boxShadow:
-            "0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06)",
+            "0 30px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(224,130,99,0.10)",
           overflow: "hidden",
         }}
       >
@@ -39,8 +39,8 @@ export const Terminal = ({ children }: { children: ReactNode }) => {
             alignItems: "center",
             gap: 8,
             padding: "14px 18px",
-            borderBottom: "1px solid rgba(255,255,255,0.06)",
-            background: "rgba(255,255,255,0.02)",
+            borderBottom: "1px solid rgba(224,130,99,0.10)",
+            background: "rgba(255,255,255,0.015)",
           }}
         >
           <div
@@ -72,7 +72,7 @@ export const Terminal = ({ children }: { children: ReactNode }) => {
               flex: 1,
               textAlign: "center",
               fontSize: 12,
-              color: "#7d8590",
+              color: "#9a8676",
               letterSpacing: 0.4,
             }}
           >
@@ -84,7 +84,7 @@ export const Terminal = ({ children }: { children: ReactNode }) => {
         <div
           style={{
             padding: "26px 28px",
-            color: "#c9d1d9",
+            color: "#e6dccb",
             fontSize: 19,
             lineHeight: 1.55,
             minHeight: 460,
