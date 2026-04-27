@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.nanobrain.evolve</string>
+
+  <!-- Run monthly: 1st of each month at 03:00 -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Day</key>
+    <integer>1</integer>
+    <key>Hour</key>
+    <integer>3</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-lc</string>
+    <string>cd $HOME/brain &amp;&amp; claude -p &lt; code/skills/brain-evolve/SKILL.md &gt; data/_logs/evolve.log 2&gt;&amp;1</string>
+  </array>
+
+  <key>RunAtLoad</key>
+  <false/>
+
+  <key>StandardOutPath</key>
+  <string>/tmp/nanobrain-evolve.out</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/nanobrain-evolve.err</string>
+</dict>
+</plist>

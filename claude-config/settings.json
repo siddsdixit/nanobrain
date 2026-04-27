@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "_comment": "Synced Claude Code settings. install.sh merges these hooks into ~/.claude/settings.json. Stop fires every turn (throttled by capture.sh). SessionEnd, PreCompact, and Notification force-capture as safety nets so long-running sessions never lose signal.",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/brain/code/hooks/capture.sh"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/brain/code/hooks/capture.sh"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/brain/code/hooks/capture.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

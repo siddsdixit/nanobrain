@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-mcp.json",
+  "_comment": "Synced MCP server registry. install.sh merges these into ~/.claude/mcp.json. Auth tokens and OAuth secrets stay machine-local in ~/.claude/.env, NEVER committed.",
+  "mcpServers": {
+    "_template_slack": {
+      "_disabled": true,
+      "_comment": "Enable by removing the leading underscore on the key. Replace with real workspace slug. Token from ~/.claude/.env.",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-slack"],
+      "env": {
+        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}",
+        "SLACK_TEAM_ID": "${SLACK_TEAM_ID}"
+      }
+    },
+    "_template_granola": {
+      "_disabled": true,
+      "_comment": "Granola MCP. Configure once the server command + auth are available.",
+      "command": "TBD",
+      "args": [],
+      "env": {}
+    },
+    "_template_gmail": {
+      "_disabled": true,
+      "_comment": "Read-only OAuth pattern. Configure once Google MCP server command is available.",
+      "command": "TBD",
+      "args": [],
+      "env": {}
+    }
+  }
+}

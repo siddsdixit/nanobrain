@@ -1,0 +1,26 @@
+# Secrets and machine-local state never enter the repo
+.env
+*.env
+.env.*
+
+# Sensitive sources (contracts, NDAs, medical, legal). Encrypted at rest, never committed.
+data/_sensitive/
+
+# Per-source watermarks (machine-local progress trackers)
+data/**/.watermark
+data/**/.distill-watermark
+
+# Backup snapshots created before risky edits (per code/SAFETY.md M5)
+code/_backup/
+
+# OS / editor artifacts
+.cache/
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# Direct local overrides
+*.local
+*.local-backup-*

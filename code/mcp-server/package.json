@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "description": "MCP server exposing the brain as native tools to Claude Code, Cursor, Codex, Gemini.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
