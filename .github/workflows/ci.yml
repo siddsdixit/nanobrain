@@ -1,0 +1,28 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  smoke:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install jq
+        run: brew install jq
+
+      - name: Run smoke test
+        run: bash test/smoke.sh
+
+      - name: Lint shell scripts
+        run: |
+          brew install shellcheck
+          shellcheck code/hooks/capture.sh code/hooks/redact.sh code/install.sh test/smoke.sh || true

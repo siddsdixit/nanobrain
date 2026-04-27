@@ -1,19 +1,27 @@
 # Goals
 
-## North Star
-Your single most important outcome for the year.
+_Synthetic example data._
 
-## This quarter
-3-5 goals.
+## Quarter (Q2 2026)
 
-## 1 year
-5-10 goals.
+- Ship Ledger v1 to first 5 paying customers.
+- Decide on Acme offer by 2026-05-15.
+- Hit 100 captures in this brain (rough proxy for "actually using nanobrain").
 
-## 5 year
-Vision.
+## Year (2026)
 
-## Tradeoff filters
-What you'll trade off and why.
+- $5k MRR on Ledger by year-end.
+- 1 conference talk delivered.
+- Maintain weekly `/brain-evolve` cadence for 6 months.
 
-## Deliberately NOT prioritizing
-What you're choosing to not do.
+## Five-year
+
+- Build a small portfolio of indie products that compounds.
+- Stay technical (don't drift into pure management).
+- Keep brain readable by future-me without any tooling.
+
+## Deliberately not prioritizing
+
+- Twitter following / personal brand.
+- Open-source contributions outside my own projects.
+- Side consulting.

@@ -1,5 +1,17 @@
-# urepos
+# Repos
 
-_Index. Per-entity detail in brain/repo/<slug>.md as needed._
+_Synthetic example data._
 
-(populate over time)
+## Active
+
+- [[Ledger]] — `github.com/avery/ledger`. Last activity: 2026-04-25.
+- **personal-brain** — this private brain repo. Last capture: 2026-04-26.
+- **dotfiles** — `github.com/avery/dotfiles`. Last activity: 2026-04-18.
+
+## Stale (verify)
+
+- **side-blog** — last activity 2026-02-08. Mark archived if no edit by 2026-05-08.
+
+## Archived
+
+- _(none yet)_

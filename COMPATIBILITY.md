@@ -5,106 +5,113 @@ The framework has two halves:
 1. **Read side**: agents read `brain/*.md` to load context at session start.
 2. **Capture side**: when a session ends, the conversation is distilled into the brain.
 
-The read side is vendor-neutral and works almost anywhere markdown is consumable. The capture side currently relies on Claude Code's `Stop` hook.
+The read side is vendor-neutral and works almost anywhere markdown is consumable. The capture side uses Claude Code's `Stop` hook natively, and a generic wrapper (`code/runtimes/wrap.sh`) for any other CLI.
 
 ## Today
 
-| Tool | Reads brain | Captures sessions | Effort |
+| Tool | Reads brain | Captures sessions | Status |
 |---|:---:|:---:|---|
 | **Claude Code** (CLI) | ✅ via `CLAUDE.md` `@`-import | ✅ Stop / SessionEnd / PreCompact hooks | shipping |
-| **Codex CLI** | ✅ via `AGENTS.md` ([spec](https://agents.md)) | ❌ no native hook | wrapper script |
-| **Gemini CLI** | ✅ via `GEMINI.md` | ❌ no native hook | wrapper script |
-| **Cursor** | ✅ via `AGENTS.md` or `.cursorrules` | ❌ no native hook | extension |
-| **Aider** | ✅ via `AGENTS.md` | ⚠️ `/save` is manual | low |
-| **Claude desktop / web** | ⚠️ via Project files or paste | ❌ no filesystem access | browser ext |
-| **ChatGPT (web)** | ⚠️ via custom GPT files / Actions | ❌ no filesystem access | custom GPT + Actions |
-| **ChatGPT desktop** | ✅ via Files connector (filesystem MCP) | ❌ no native hook | MCP-only |
+| **Codex CLI** | ✅ via `AGENTS.md` ([spec](https://agents.md)) | ✅ via `runtimes/wrap.sh` | shipping |
+| **Gemini CLI** | ✅ via `GEMINI.md` | ✅ via `runtimes/wrap.sh` | shipping |
+| **Aider** | ✅ via `AGENTS.md` | ✅ via `runtimes/wrap.sh` | shipping |
+| **Cursor** | ✅ via `AGENTS.md` or `.cursorrules` | ⚠️ via MCP `brain_add_to_inbox` (manual) | shipping (read), partial (capture) |
+| **Claude desktop / web** | ✅ via MCP server | ⚠️ manual paste OR upcoming browser ext | partial |
+| **ChatGPT (desktop)** | ✅ via MCP server | ❌ no session-end hook | partial |
+| **ChatGPT (web)** | ⚠️ via custom GPT files | ❌ no filesystem | browser-ext only |
+| **Gemini (web)** | ⚠️ via custom Gem instructions | ❌ no filesystem | browser-ext only |
 | **Any MCP-capable client** | ✅ via the nanobrain MCP server | ⚠️ if client has session-end hook | depends |
 
-## How each one works today
+## Read side — how each tool loads your brain
 
 ### Claude Code (the reference)
 
-`install.sh` symlinks `~/.claude/CLAUDE.md` → repo's `claude-config/CLAUDE.md`, which `@`-imports the user's private `brain/*.md`. Stop hook in `~/.claude/settings.json` runs `capture.sh` on every assistant turn (throttled).
+`install.sh` symlinks `~/.claude/CLAUDE.md` → repo's `claude-config/CLAUDE.md`, which `@`-imports your private `brain/*.md`. Stop hook in `~/.claude/settings.json` runs `capture.sh` on every assistant turn (throttled).
 
-### Codex CLI / Gemini CLI / Aider / Cursor (read-side already works)
+### Codex CLI / Gemini CLI / Aider / Cursor
 
-These tools all honor the `agents.md` convention or close variants. The repo ships top-level `AGENTS.md` and `GEMINI.md` that mirror the boot sequence in `CLAUDE.md`. Drop those files into the user's private brain repo (or symlink) and the agent will load `brain/self.md`, `brain/goals.md`, etc. on session start.
+These tools all honor `agents.md` or close variants. The repo ships top-level `AGENTS.md` and `GEMINI.md`. Symlink to your private brain repo:
 
-For Cursor specifically, `AGENTS.md` is honored in recent versions; for older versions, also create `.cursorrules` with the same content.
+```bash
+cd <your-project>
+ln -s $HOME/my-brain/AGENTS.md ./AGENTS.md     # Codex, Aider, Cursor
+ln -s $HOME/my-brain/GEMINI.md ./GEMINI.md     # Gemini CLI
+```
 
-### Web Claude / ChatGPT / Gemini web
+For older Cursor versions that read `.cursorrules` instead, copy:
 
-No filesystem access. Three options:
+```bash
+cp $HOME/my-brain/AGENTS.md ./.cursorrules
+```
 
-1. **Project files / custom GPT files**: upload the `brain/*.md` files as project context. Stale by definition (you have to re-upload after each compact / evolve).
-2. **MCP via desktop bridge**: ChatGPT desktop and Claude desktop both support MCP. Run the nanobrain MCP server locally; the desktop app reads via stdio. This gives live read access without uploads.
-3. **Browser extension** (planned, not shipped): scrape the conversation, post to a local endpoint, run `capture.sh` with a synthesized payload.
+### Web Claude / ChatGPT / Gemini
 
-## Adding capture support to a new tool
+Three options:
 
-The capture pipeline takes a JSON payload like:
+1. **Project files / custom GPT files**: upload `brain/*.md` as project context. Stale by definition; re-upload after each compact / evolve.
+2. **MCP via desktop bridge** (best): ChatGPT desktop and Claude desktop support MCP. Run the nanobrain MCP server locally; the desktop reads via stdio. Live, no uploads.
+3. **Browser extension** (roadmap): scrape the conversation DOM, fire capture.sh.
+
+## Capture side — `runtimes/wrap.sh`
+
+The capture pipeline takes a JSON payload:
 
 ```json
 {
   "session_id": "abc123",
-  "transcript_path": "/path/to/transcript.jsonl",
+  "transcript_path": "/path/to/transcript",
   "stop_hook_active": false,
-  "hook_event_name": "Stop"
+  "hook_event_name": "SessionEnd"
 }
 ```
 
-…pipes it into `code/hooks/capture.sh` on stdin. That's it. Any tool that can:
+…piped into `code/hooks/capture.sh` on stdin.
 
-1. Detect a session ending,
-2. Write the conversation to a file,
-3. Run a shell command,
+### Universal wrapper (recommended)
 
-…can drive the capture pipeline. Reference patterns:
-
-### Wrapper-script pattern (Codex / Gemini / Aider)
-
-Wrap the agent's CLI:
+`code/runtimes/wrap.sh <cli> [args...]` runs any CLI, tee's its output to a temp transcript, and fires capture.sh on exit. Add aliases:
 
 ```bash
-#!/usr/bin/env bash
-# ~/bin/codex-with-brain
-TRANSCRIPT="$(mktemp -t codex-session.XXXXXX.jsonl)"
-codex "$@" | tee "$TRANSCRIPT"
-
-SESSION_ID="$(uuidgen)"
-PAYLOAD=$(jq -n \
-  --arg sid "$SESSION_ID" --arg tp "$TRANSCRIPT" \
-  '{session_id: $sid, transcript_path: $tp, stop_hook_active: false, hook_event_name: "SessionEnd"}')
-
-echo "$PAYLOAD" | bash $HOME/brain/code/hooks/capture.sh
+# ~/.zshrc or ~/.bashrc
+alias codex='$HOME/nanobrain/code/runtimes/wrap.sh codex'
+alias gemini='$HOME/nanobrain/code/runtimes/wrap.sh gemini'
+alias aider='$HOME/nanobrain/code/runtimes/wrap.sh aider'
 ```
 
-### MCP-write pattern (any MCP-capable client)
+Tested in CI against mock CLIs. See `code/runtimes/README.md` for details.
 
-The MCP server exposes `brain_add_to_inbox(source, content, metadata)`. A long-conversation client can call this at session end with the conversation as `content`. Distillation runs separately (`/brain distill <source>`) on cron.
+### MCP-write pattern (Cursor, ChatGPT desktop, anything MCP-capable)
 
-### Browser extension pattern (web tools)
+The MCP server exposes `brain_add_to_inbox(source, content, metadata)`. The client calls this at session end with the conversation as `content`. Distillation runs separately (`/brain distill <source>`) on cron.
 
-A browser extension scrapes the DOM, posts the conversation to `http://localhost:<port>/capture` on a tiny local HTTP server. The local server invokes `capture.sh`. Adds a "Save to brain" button to the UI of Claude / ChatGPT / Gemini web.
+### Browser extension (web tools, roadmap)
 
-This is the highest-leverage missing piece since most casual users live in the web UIs. Roadmap below.
+`nanobrain-web` will scrape the DOM, post to `http://localhost:7777/capture`. Local server runs `capture.sh`.
 
-## Roadmap
+## Adding a new agent runtime
 
-- [ ] **`code/agents/wrappers/` directory** with reference wrapper scripts for Codex CLI, Gemini CLI, Aider.
-- [ ] **`code/agents/cursor/` extension** that fires capture on chat-window close.
-- [ ] **`nanobrain-web`** browser extension (Chromium + Firefox) that captures from `claude.ai`, `chatgpt.com`, `gemini.google.com`. Posts to `localhost:7777/capture`.
-- [ ] **MCP server: real implementations** for `brain_search`, `brain_get_entity`, `brain_relationships`, `brain_query_graph` (currently stubs).
-- [ ] **Remote MCP option** — host nanobrain MCP on a small FaaS endpoint with auth so you can hit it from Claude.ai's Project tools without running anything locally.
+Recipe:
 
-## Questions / contribute
-
-If you want to add a new agent runtime, the recipe is:
-
-1. Add a top-level activation file at the repo root (e.g. `OPENCODE.md`) mirroring `AGENTS.md`.
-2. Add a wrapper script under `code/agents/wrappers/<name>.sh` if the runtime is a CLI without a session-end hook.
+1. **Read side**: add a top-level activation file at the repo root (e.g. `OPENCODE.md`) mirroring `AGENTS.md`.
+2. **Capture side**: if the runtime is a CLI, `wrap.sh` already handles it via alias. If it's a GUI without a CLI, document the MCP-write pattern in `code/runtimes/<name>/README.md`.
 3. Add a row to the table at the top of this file.
-4. Open a PR with a 60-second screen recording showing the capture round-trip.
+4. Add a smoke-test case in `test/smoke.sh` T9 with a mock binary.
+5. Open a PR.
 
-The fastest contribution is a wrapper script for whichever CLI you actually use.
+## Verifying capture works
+
+Regardless of runtime:
+
+```bash
+# 1. Start a session in the wrapped CLI
+codex chat
+# ... do some work, exit ...
+
+# 2. Check the capture log
+tail -3 $HOME/brain/data/_logs/capture.log
+# Expect: "ok: committed → <sha>"  OR  "ok: nothing worth keeping in delta"
+
+# 3. Check the brain repo
+cd $HOME/my-brain
+git log --oneline -5
+```

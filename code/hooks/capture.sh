@@ -17,11 +17,15 @@
 set -euo pipefail
 
 BRAIN_DIR="${BRAIN_DIR:-$HOME/brain}"
+# Per-machine state lives outside the brain repo (XDG state dir).
+# Watermarks and locks are machine-local by design — never synced.
+STATE_DIR="${NANOBRAIN_STATE_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/nanobrain}"
 LOG_DIR="$BRAIN_DIR/data/_logs"
-SESSIONS_DIR="$LOG_DIR/sessions"
+SESSIONS_DIR="$STATE_DIR/sessions"
 LOG="$LOG_DIR/capture.log"
-LOCK="$BRAIN_DIR/.capture.lock"
+LOCK="$STATE_DIR/capture.lock"
 STOP_MD="$BRAIN_DIR/code/hooks/STOP.md"
+REDACT="$BRAIN_DIR/code/hooks/redact.sh"
 TIMEOUT_SEC=90
 
 # Throttle thresholds (override via env if needed)
@@ -29,7 +33,7 @@ MIN_NEW_BYTES="${NANOBRAIN_MIN_BYTES:-5000}"   # 5 KB of new transcript
 MIN_MINUTES="${NANOBRAIN_MIN_MINUTES:-30}"     # OR 30 minutes since last capture
 FORCE="${FORCE_CAPTURE:-0}"                    # /brain checkpoint sets this
 
-mkdir -p "$LOG_DIR" "$SESSIONS_DIR"
+mkdir -p "$LOG_DIR" "$SESSIONS_DIR" "$STATE_DIR"
 
 ts() { date +%Y-%m-%dT%H:%M:%S; }
 epoch() { date +%s; }
@@ -109,16 +113,25 @@ if [ "$SHOULD_CAPTURE" -eq 0 ]; then
   exit 0
 fi
 
-# Acquire lock
+# Acquire lock. Lock file holds "<pid> <epoch>". A lock is considered held
+# only if the PID is still alive AND the timestamp is younger than 2x the
+# timeout. PID-reuse on macOS can fool kill -0; the timestamp closes that gap.
 if [ -f "$LOCK" ]; then
-  HOLDER="$(cat "$LOCK" 2>/dev/null || echo)"
-  if [ -n "$HOLDER" ] && kill -0 "$HOLDER" 2>/dev/null; then
-    log "skip: lock held by pid $HOLDER"
+  HOLDER_DATA="$(cat "$LOCK" 2>/dev/null || echo)"
+  HOLDER_PID="$(echo "$HOLDER_DATA" | awk '{print $1}')"
+  HOLDER_TS="$(echo "$HOLDER_DATA" | awk '{print $2}')"
+  HOLDER_AGE=$((NOW_EPOCH - ${HOLDER_TS:-0}))
+  if [ -n "$HOLDER_PID" ] \
+     && kill -0 "$HOLDER_PID" 2>/dev/null \
+     && [ "$HOLDER_AGE" -lt $((TIMEOUT_SEC * 2)) ]; then
+    log "skip: lock held by pid $HOLDER_PID (age ${HOLDER_AGE}s)"
     exit 0
   fi
+  [ "$HOLDER_AGE" -ge $((TIMEOUT_SEC * 2)) ] && \
+    log "stale lock removed (age ${HOLDER_AGE}s, pid $HOLDER_PID)"
   rm -f "$LOCK"
 fi
-echo $$ > "$LOCK"
+echo "$$ $NOW_EPOCH" > "$LOCK"
 trap 'rm -f "$LOCK"' EXIT
 
 # Stash any manual edits
@@ -161,12 +174,14 @@ trap 'rm -f "$LOCK" "$DELTA_FILE"' EXIT
   echo ""
   cat "$STOP_MD"
   echo ""
-  echo "## New transcript (delta only)"
+  echo "## New transcript (delta only, secrets redacted)"
   echo ""
+  # Pipe through redact.sh so common secret patterns never reach claude -p.
+  # The filter is best-effort, not a guarantee. Users still need to be careful.
   if [ "$LAST_OFFSET" -gt 0 ]; then
-    tail -c +"$((LAST_OFFSET + 1))" "$TRANSCRIPT"
+    tail -c +"$((LAST_OFFSET + 1))" "$TRANSCRIPT" | bash "$REDACT"
   else
-    cat "$TRANSCRIPT"
+    bash "$REDACT" < "$TRANSCRIPT"
   fi
 } > "$DELTA_FILE"
 
