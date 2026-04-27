@@ -3,9 +3,12 @@ import { Typewriter, RevealLines } from "../components/Typewriter";
 const COMMAND = "nanobrain list project";
 const OUTPUT = [
   "",
-  "1 project:",
+  "4 projects:",
   "",
-  "  ledger                  [active]    Ledger",
+  "  nanobrain               [active]    second brain in markdown",
+  "  ledger                  [active]    B2B finance tool",
+  "  brain-evolve-cycle      [paused]    weekly self-improvement loop",
+  "  source-plugins-q2       [active]    Slack + Granola + Gmail ingest",
 ];
 
 export const ListScene = () => {

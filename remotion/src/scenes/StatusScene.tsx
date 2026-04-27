@@ -5,10 +5,10 @@ const OUTPUT = [
   "",
   "nanobrain  ·  ~/my-brain",
   "",
-  "  person     1",
-  "  project    1",
-  "  decision   1",
-  "  concept    1",
+  "  person     12",
+  "  project    4",
+  "  decision   18",
+  "  concept    6",
   "  indexes    7",
 ];
 

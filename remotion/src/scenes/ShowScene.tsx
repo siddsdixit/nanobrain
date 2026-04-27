@@ -1,18 +1,22 @@
 import { Typewriter, RevealLines } from "../components/Typewriter";
 
-const COMMAND = "nanobrain show person jane-doe";
+const COMMAND = "nanobrain show person sid";
 const OUTPUT = [
   "",
-  "person/jane-doe",
+  "person/sid",
   "",
-  "  name              Jane Doe",
-  "  role              Recruiter at Acme",
+  "  name              Sid Dixit",
+  "  role              Indie engineer · founder",
+  "  github            @siddsdixit",
+  "  shipping          nanobrain (this) · ledger",
+  "  stack             TypeScript · Vercel · Fly.io",
   "  status            active",
-  "  first_contact     2026-03-12",
   "",
-  "# Jane Doe",
+  "# Sid Dixit",
   "",
-  "Recruiter at Acme. Sourced via [[Sam Park]] (Acme PM).",
+  "Builds developer tools that compound.",
+  "Maintainer of nanobrain. Open issues at",
+  "github.com/siddsdixit/nanobrain.",
 ];
 
 export const ShowScene = () => {

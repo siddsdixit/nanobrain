@@ -1,18 +1,18 @@
 import { Typewriter, RevealLines } from "../components/Typewriter";
 
-const COMMAND = "nanobrain who jane";
+const COMMAND = "nanobrain who sid";
 const OUTPUT = [
   "",
-  "3 matches for \"jane\":",
+  "4 matches for \"sid\":",
   "",
-  "  person/jane-doe.md",
-  "    Jane Doe — Recruiter at Acme. First contact 2026-03-12.",
-  "",
-  "  people.md",
-  "    [[Jane Doe]] — recruiter at Acme. Referred by Sam Park.",
+  "  person/sid.md",
+  "    Sid Dixit — indie engineer. Building nanobrain.",
   "",
   "  projects.md",
-  "    Acme thread — staff-eng loop in progress. Recruiter [[Jane Doe]].",
+  "    [[nanobrain]] — maintained by [[Sid Dixit]] (@siddsdixit).",
+  "",
+  "  learnings.md",
+  "    2026-04-18 — Sid: \"markdown ages better than schemas.\"",
 ];
 
 export const WhoScene = () => {

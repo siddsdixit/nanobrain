@@ -1,6 +1,7 @@
 import { AbsoluteFill, Sequence } from "remotion";
 import { Terminal } from "./components/Terminal";
 import { Title } from "./components/Title";
+import { Scanlines, Vignette, GridBackground } from "./components/Scanlines";
 import { StatusScene } from "./scenes/StatusScene";
 import { WhoScene } from "./scenes/WhoScene";
 import { ListScene } from "./scenes/ListScene";
@@ -9,14 +10,14 @@ import { ClosingScene } from "./scenes/ClosingScene";
 
 export const FPS = 30;
 
-// Scene durations in frames. Total ≈ 17s.
+// Scene durations in frames. Total ≈ 22s.
 const SCENES = {
-  title: 60,    // 2.0s
+  title: 90,    // 3.0s — brick-style brand slam-in
   status: 90,   // 3.0s
-  who: 120,    // 4.0s
+  who: 130,    // 4.3s
   list: 90,    // 3.0s
-  show: 120,   // 4.0s
-  closing: 60, // 2.0s
+  show: 150,   // 5.0s — Sid's bio is rich, viewers need time to read
+  closing: 110,// 3.7s — WORKS WITH panel
 };
 
 export const DEMO_DURATION_FRAMES =
@@ -33,12 +34,12 @@ export const NanobrainDemo = () => {
   return (
     <AbsoluteFill
       style={{
-        background:
-          "radial-gradient(ellipse at top, #1a1f2e 0%, #0d1117 60%, #050810 100%)",
         fontFamily:
           "ui-monospace, 'JetBrains Mono', 'Fira Code', SF Mono, Menlo, Consolas, monospace",
       }}
     >
+      <GridBackground />
+
       <Sequence from={at("title")} durationInFrames={SCENES.title}>
         <Title />
       </Sequence>
@@ -65,6 +66,9 @@ export const NanobrainDemo = () => {
       <Sequence from={at("closing")} durationInFrames={SCENES.closing}>
         <ClosingScene />
       </Sequence>
+
+      <Vignette />
+      <Scanlines />
     </AbsoluteFill>
   );
 };
