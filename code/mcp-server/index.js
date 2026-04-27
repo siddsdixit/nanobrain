@@ -7,9 +7,14 @@
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import {
+  ListToolsRequestSchema,
+  CallToolRequestSchema,
+} from "@modelcontextprotocol/sdk/types.js";
 import * as fs from "fs/promises";
 import * as path from "path";
 
+const BRAIN_DIR = process.env.BRAIN_DIR ?? `${process.env.HOME}/brain`;
 
 const server = new Server(
   { name: "nanobrain", version: "0.1.0" },
@@ -118,9 +123,9 @@ const TOOLS = [
 // Tool handlers (STUBS — implement against filesystem)
 // ──────────────────────────────────────────────────────────────────────────
 
-server.setRequestHandler({ method: "tools/list" }, async () => ({ tools: TOOLS }));
+server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
 
-server.setRequestHandler({ method: "tools/call" }, async (req) => {
+server.setRequestHandler(CallToolRequestSchema, async (req) => {
   const { name, arguments: args } = req.params;
   switch (name) {
     case "brain_search":

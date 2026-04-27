@@ -16,6 +16,16 @@ code/_backup/
 # OS / editor artifacts
 .cache/
 .DS_Store
+
+# nanobrain framework's own runtime state (logs, locks, watermarks)
+data/_logs/
+.capture.lock
+
+# Node deps (mcp-server)
+node_modules/
+
+# Smoke-test scratch files (copied next to node_modules at runtime)
+code/mcp-server/_smoke-client.mjs
 .idea/
 .vscode/
 *.swp

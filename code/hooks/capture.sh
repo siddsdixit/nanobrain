@@ -89,6 +89,7 @@ fi
 NEW_BYTES=$((TRANSCRIPT_BYTES - LAST_OFFSET))
 SECONDS_SINCE=$((NOW_EPOCH - LAST_EPOCH))
 MINUTES_SINCE=$((SECONDS_SINCE / 60))
+HOURS_SINCE=$((SECONDS_SINCE / 3600))
 
 # Throttle decision
 SHOULD_CAPTURE=0
@@ -191,7 +192,9 @@ else
   if [ -n "$ORPHAN" ]; then
     log "warn: uncommitted changes after capture; reverting"
     git checkout -- . 2>/dev/null || true
-    git clean -fd brain/ data/ 2>/dev/null || true
+    # Clean only brain/ — data/ holds our own logs/watermarks which
+    # are gitignored but git clean -fd would still remove them.
+    git clean -fd brain/ 2>/dev/null || true
   else
     log "ok: nothing worth keeping in delta"
   fi
