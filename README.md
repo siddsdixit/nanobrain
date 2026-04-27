@@ -19,6 +19,8 @@
 >
 > **`nanobrain` is the markdown + git equivalent. Yours forever, portable across every agent.**
 
+![nanobrain demo](assets/demo.gif)
+
 </div>
 
 ---

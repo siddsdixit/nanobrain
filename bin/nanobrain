@@ -1,0 +1,165 @@
+#!/usr/bin/env node
+// nanobrain CLI — browse your brain corpus from any terminal.
+// Reuses the same parsing/listing logic as the MCP server. Vendor-neutral.
+//
+// Usage:
+//   nanobrain status
+//   nanobrain who <query>
+//   nanobrain list <person|project|decision|concept>
+//   nanobrain show <type> <slug>
+//
+// Honors BRAIN_DIR env var (default $HOME/brain).
+
+import { promises as fs } from "fs";
+import * as path from "path";
+
+const BRAIN_DIR = process.env.BRAIN_DIR ?? `${process.env.HOME}/brain`;
+const ENTITY_TYPES = ["person", "project", "decision", "concept"];
+const INDEXES = ["self", "goals", "projects", "people", "learnings", "decisions", "repos"];
+
+// Resolve where the brain corpus actually lives. Standard layout has files at
+// $BRAIN_DIR/brain/. The example fixtures are flat (the contents of a brain
+// dir, not a wrapping dir). Try both.
+async function resolveBrainRoot() {
+  const candidates = [path.join(BRAIN_ROOT), BRAIN_DIR];
+  for (const p of candidates) {
+    try { await fs.access(path.join(p, "self.md")); return p; } catch {}
+  }
+  return candidates[0];
+}
+let BRAIN_ROOT = path.join(BRAIN_DIR, "brain"); // overridden at boot
+
+const c = {
+  reset: "\x1b[0m", bold: "\x1b[1m", dim: "\x1b[2m",
+  cyan: "\x1b[36m", green: "\x1b[32m", yellow: "\x1b[33m", magenta: "\x1b[35m",
+};
+const useColor = process.stdout.isTTY && !process.env.NO_COLOR;
+const co = (s, color) => (useColor ? `${color}${s}${c.reset}` : s);
+
+function parseFrontmatter(text) {
+  if (!text.startsWith("---\n")) return { frontmatter: {}, body: text };
+  const end = text.indexOf("\n---\n", 4);
+  if (end === -1) return { frontmatter: {}, body: text };
+  const yaml = text.slice(4, end);
+  const body = text.slice(end + 5);
+  const fm = {};
+  for (const line of yaml.split("\n")) {
+    const m = line.match(/^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$/);
+    if (m) fm[m[1]] = m[2].trim().replace(/^["']|["']$/g, "");
+  }
+  return { frontmatter: fm, body };
+}
+
+async function safeRead(p) { try { return await fs.readFile(p, "utf8"); } catch { return null; } }
+async function safeDir(p)  { try { return await fs.readdir(p); } catch { return []; } }
+
+async function corpusFiles() {
+  const out = [];
+  for (const idx of INDEXES) out.push(path.join(BRAIN_ROOT, `${idx}.md`));
+  for (const t of ENTITY_TYPES) {
+    for (const n of await safeDir(path.join(BRAIN_ROOT, t))) {
+      if (n.endsWith(".md") && n !== "README.md") out.push(path.join(BRAIN_ROOT, t, n));
+    }
+  }
+  return out;
+}
+
+async function cmdStatus() {
+  console.log(co("nanobrain", c.bold + c.cyan) + co(`  ·  ${BRAIN_DIR}`, c.dim));
+  console.log("");
+  for (const t of ENTITY_TYPES) {
+    const files = (await safeDir(path.join(BRAIN_ROOT, t))).filter((n) => n.endsWith(".md"));
+    console.log(`  ${co(t.padEnd(9), c.cyan)} ${files.length}`);
+  }
+  let totalIdx = 0;
+  for (const idx of INDEXES) {
+    const f = await safeRead(path.join(BRAIN_ROOT, `${idx}.md`));
+    if (f) totalIdx++;
+  }
+  console.log(`  ${co("indexes".padEnd(9), c.cyan)} ${totalIdx}`);
+}
+
+async function cmdWho(query) {
+  const q = query.toLowerCase();
+  const hits = [];
+  for (const f of await corpusFiles()) {
+    const text = await safeRead(f);
+    if (!text) continue;
+    const lc = text.toLowerCase();
+    if (!lc.includes(q)) continue;
+    const idx = lc.indexOf(q);
+    const start = Math.max(0, idx - 50);
+    const end = Math.min(text.length, idx + query.length + 100);
+    hits.push({ path: path.relative(BRAIN_DIR, f), snippet: text.slice(start, end).replace(/\n+/g, " ").trim() });
+  }
+  if (hits.length === 0) { console.log(co(`no matches for "${query}"`, c.dim)); return; }
+  console.log(co(`${hits.length} match${hits.length === 1 ? "" : "es"} for "${query}":`, c.bold));
+  console.log("");
+  for (const h of hits.slice(0, 5)) {
+    console.log(`  ${co(h.path, c.green)}`);
+    console.log(`    ${co(h.snippet.slice(0, 140) + (h.snippet.length > 140 ? "…" : ""), c.dim)}`);
+    console.log("");
+  }
+}
+
+async function cmdList(typeArg) {
+  const type = (typeArg ?? "").replace(/s$/, "");
+  if (!ENTITY_TYPES.includes(type)) {
+    console.log(`type must be one of: ${ENTITY_TYPES.join(", ")}`);
+    return;
+  }
+  const dir = path.join(BRAIN_ROOT, type);
+  const files = (await safeDir(dir)).filter((n) => n.endsWith(".md") && n !== "README.md");
+  if (files.length === 0) { console.log(co(`no ${type} entries`, c.dim)); return; }
+  console.log(co(`${files.length} ${type}${files.length === 1 ? "" : "s"}:`, c.bold));
+  console.log("");
+  for (const name of files) {
+    const slug = name.replace(/\.md$/, "");
+    const text = await safeRead(path.join(dir, name));
+    const { frontmatter } = text ? parseFrontmatter(text) : { frontmatter: {} };
+    const status = frontmatter.status ? co(`[${frontmatter.status}]`, c.yellow) : "";
+    const desc = (frontmatter.role || frontmatter.description || frontmatter.name || "").slice(0, 60);
+    console.log(`  ${co(slug.padEnd(28), c.green)} ${status} ${co(desc, c.dim)}`);
+  }
+}
+
+async function cmdShow(type, slug) {
+  if (!ENTITY_TYPES.includes(type)) { console.log(`type must be one of: ${ENTITY_TYPES.join(", ")}`); return; }
+  const file = path.join(BRAIN_ROOT, type, `${slug}.md`);
+  const text = await safeRead(file);
+  if (!text) { console.log(co(`not found: ${type}/${slug}.md`, c.dim)); return; }
+  const { frontmatter, body } = parseFrontmatter(text);
+  console.log(co(`${type}/${slug}`, c.bold + c.cyan));
+  if (Object.keys(frontmatter).length) {
+    console.log("");
+    for (const [k, v] of Object.entries(frontmatter)) console.log(`  ${co(k.padEnd(16), c.dim)} ${v}`);
+  }
+  console.log("");
+  console.log(body.trim());
+}
+
+const [, , cmd, ...rest] = process.argv;
+const arg = rest.join(" ");
+
+BRAIN_ROOT = await resolveBrainRoot();
+
+try {
+  switch (cmd) {
+    case "status":              await cmdStatus(); break;
+    case "who": case "search":  await cmdWho(arg || ""); break;
+    case "list":                await cmdList(rest[0]); break;
+    case "show":                await cmdShow(rest[0], rest[1]); break;
+    default:
+      console.log(co("nanobrain", c.bold + c.cyan));
+      console.log("");
+      console.log("  nanobrain status              brain health overview");
+      console.log("  nanobrain who <query>         search across the corpus");
+      console.log("  nanobrain list <type>         enumerate person/project/decision/concept");
+      console.log("  nanobrain show <type> <slug>  read one entity");
+      console.log("");
+      console.log(co(`  BRAIN_DIR=${BRAIN_DIR}`, c.dim));
+  }
+} catch (e) {
+  console.error(co(`error: ${e.message}`, c.yellow));
+  process.exit(1);
+}
