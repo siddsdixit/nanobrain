@@ -16,20 +16,22 @@ code/_backup/
 # OS / editor artifacts
 .cache/
 .DS_Store
+.idea/
+.vscode/
+*.swp
+*~
 
 # nanobrain framework's own runtime state (logs, locks, watermarks)
 data/_logs/
 .capture.lock
 
-# Node deps (mcp-server)
+# Node deps (mcp-server, remotion)
 node_modules/
+remotion/out/
 
 # Smoke-test scratch files (copied next to node_modules at runtime)
 code/mcp-server/_smoke-client.mjs
-.idea/
-.vscode/
-*.swp
-*~
+code/mcp-server/_edge-client.mjs
 
 # Direct local overrides
 *.local

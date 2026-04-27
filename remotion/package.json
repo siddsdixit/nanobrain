@@ -1,0 +1,23 @@
+{
+  "name": "nanobrain-demo",
+  "version": "1.0.0",
+  "description": "Remotion-rendered hero demo for nanobrain",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "remotion studio",
+    "build": "remotion render NanobrainDemo out/demo.mp4 --codec h264 --crf 18",
+    "build:gif": "remotion render NanobrainDemo out/demo-frames.mp4 --codec h264 --crf 18 && ffmpeg -y -i out/demo-frames.mp4 -vf 'fps=20,scale=1100:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128[p];[s1][p]paletteuse=dither=bayer:bayer_scale=5' ../assets/demo.gif",
+    "preview": "remotion preview"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.0.0"
+  }
+}
