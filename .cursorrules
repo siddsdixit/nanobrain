@@ -1,0 +1,50 @@
+# nanobrain — Cursor activation template
+
+For Cursor (and any agent that reads `.cursorrules`).
+
+This is a **template** that ships with the `nanobrain` framework. After running `install.sh`, your private brain repo's own `.cursorrules` (or this file via symlink/copy) is what Cursor reads.
+
+Modern Cursor versions also honor `AGENTS.md` per the [agents.md](https://agents.md) spec. Either path activates nanobrain.
+
+## Boot sequence
+
+Before responding to any task in a directory where this brain is active, read these files in order:
+
+1. `brain/self.md` — identity, voice, style, principles
+2. `brain/goals.md` — current and long-term goals
+3. `brain/projects.md` — active project threads
+4. `brain/people.md` — family, team, board, stakeholders
+5. `CONTEXT.md` — what's literally happening this week
+
+For tasks that touch strategy, architecture, or operating principles, also skim the latest entries in `brain/learnings.md` and `brain/decisions.md`.
+
+## Capture (Cursor specific)
+
+Cursor sessions don't have a Claude-style `Stop` hook. Capture works one of two ways:
+
+1. **Per-session summary via MCP.** When a meaningful Cursor session ends, append a one-paragraph summary to `data/cursor/INBOX.md` via the `brain_add_to_inbox` MCP tool. Include: what changed, what's open, what to do next.
+2. **Manual checkpoint.** Run `/brain-checkpoint` at session end. Same effect, no MCP needed.
+
+Distillation runs on the same cadence as any other source (see `code/sources/_TEMPLATE`).
+
+## Voice and style defaults
+
+- Direct. No preamble. Lead with the point.
+- No em dashes. Ever.
+- Short sentences. One idea each. Imperative voice.
+- Bullets over paragraphs for operational content.
+- One sentence per decision. Suggest simpler approaches before implementing.
+- Max 4 files per response unless purely mechanical.
+- Never scaffold/create files unless asked.
+- Never create parallel implementations. Ask "replace or integrate?" first.
+- Read existing code first. Match existing patterns.
+- "Fix and show," not "here are 3 options."
+- When in doubt, ask.
+
+## Hard rules
+
+- Treat `brain/` as the source of truth for personal context. Update it when you learn something new about the user, their projects, or their decisions.
+- Treat `data/` as immutable. Read but never modify.
+- Append-only writes go through `brain_add_to_inbox` (MCP) or shell `>>` redirect. Never read full INBOX files.
+- Redact secrets before any commit. The `code/hooks/redact.sh` helper handles common token shapes.
+- Commits use the form: `type: short description`. One logical change each.

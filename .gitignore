@@ -21,6 +21,9 @@ code/_backup/
 *.swp
 *~
 
+# Claude Code project-local session state
+.claude/
+
 # nanobrain framework's own runtime state (logs, locks, watermarks)
 data/_logs/
 .capture.lock

@@ -30,18 +30,13 @@ The read side is vendor-neutral and works almost anywhere markdown is consumable
 
 ### Codex CLI / Gemini CLI / Aider / Cursor
 
-These tools all honor `agents.md` or close variants. The repo ships top-level `AGENTS.md` and `GEMINI.md`. Symlink to your private brain repo:
+These tools all honor `agents.md` or close variants. The repo ships top-level `AGENTS.md`, `GEMINI.md`, and `.cursorrules`. Symlink to your private brain repo:
 
 ```bash
 cd <your-project>
-ln -s $HOME/my-brain/AGENTS.md ./AGENTS.md     # Codex, Aider, Cursor
-ln -s $HOME/my-brain/GEMINI.md ./GEMINI.md     # Gemini CLI
-```
-
-For older Cursor versions that read `.cursorrules` instead, copy:
-
-```bash
-cp $HOME/my-brain/AGENTS.md ./.cursorrules
+ln -s $HOME/my-brain/AGENTS.md ./AGENTS.md          # Codex, Aider, Cursor (modern)
+ln -s $HOME/my-brain/GEMINI.md ./GEMINI.md          # Gemini CLI
+ln -s $HOME/my-brain/.cursorrules ./.cursorrules    # Cursor (legacy versions)
 ```
 
 ### Web Claude / ChatGPT / Gemini
