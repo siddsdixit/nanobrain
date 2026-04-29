@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.nanobrain.distill-drainer</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>__BRAIN_DIR__/.nanobrain/code/cron/distill_drainer.sh</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>BRAIN_DIR</key><string>__BRAIN_DIR__</string>
+    <key>NANOBRAIN_DIR</key><string>__BRAIN_DIR__/.nanobrain</string>
+  </dict>
+  <key>StartInterval</key><integer>1800</integer>
+  <key>RunAtLoad</key><false/>
+  <key>StandardOutPath</key><string>__BRAIN_DIR__/data/_logs/distill-drainer.log</string>
+  <key>StandardErrorPath</key><string>__BRAIN_DIR__/data/_logs/distill-drainer.err</string>
+  <key>ProcessType</key><string>Background</string>
+  <key>LowPriorityIO</key><true/>
+  <key>Nice</key><integer>10</integer>
+</dict>
+</plist>

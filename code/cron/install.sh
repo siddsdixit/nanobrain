@@ -33,7 +33,7 @@ run() {
 mkdir -p "$BRAIN_DIR/data/_logs"
 run "mkdir -p '$LA_DIR'"
 
-for src in autosave ingest.gmail ingest.gcal ingest.gdrive ingest.slack; do
+for src in autosave distill-drainer ingest.gmail ingest.gcal ingest.gdrive ingest.slack; do
   in="$CRON_DIR/com.nanobrain.$src.plist"
   out="$LA_DIR/com.nanobrain.$src.plist"
   [ -f "$in" ] || { echo "[cron install] missing template: $in" >&2; continue; }

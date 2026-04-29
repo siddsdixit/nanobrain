@@ -75,19 +75,29 @@ else
     || echo "[install] (cron load failed; non-fatal)"
 fi
 
-# 4. Wire Claude Stop hook into ~/.claude/settings.json.
+# 4. Wire Claude capture hooks into ~/.claude/settings.json.
+# The hook is a sub-50ms file append (no LLM). Distill happens later via the drainer.
+# We register on Stop, SessionEnd, and PreCompact so all session-lifecycle moments enqueue.
 if [ "$SKIP_HOOK" -eq 1 ]; then
-  echo "[install] Stop hook NOT wired (--skip-hook)"
+  echo "[install] capture hooks NOT wired (--skip-hook)"
 else
   SETTINGS="$HOME/.claude/settings.json"
   HOOK_CMD="BRAIN_DIR=$BRAIN_DIR NANOBRAIN_DIR=$BRAIN_DIR/.nanobrain bash $BRAIN_DIR/.nanobrain/code/hooks/capture.sh"
   mkdir -p "$HOME/.claude"
   if [ ! -f "$SETTINGS" ]; then
-    printf '{\n  "hooks": {\n    "Stop": [{ "matcher": "", "hooks": [{ "type": "command", "command": "%s" }] }]\n  }\n}\n' "$HOOK_CMD" > "$SETTINGS"
-    echo "[install] Stop hook wired (new $SETTINGS)"
+    cat > "$SETTINGS" <<JSON
+{
+  "hooks": {
+    "Stop":        [{ "matcher": "", "hooks": [{ "type": "command", "command": "$HOOK_CMD" }] }],
+    "SessionEnd":  [{ "matcher": "", "hooks": [{ "type": "command", "command": "$HOOK_CMD" }] }],
+    "PreCompact":  [{ "matcher": "", "hooks": [{ "type": "command", "command": "$HOOK_CMD" }] }]
+  }
+}
+JSON
+    echo "[install] capture hooks wired (Stop, SessionEnd, PreCompact) in new $SETTINGS"
   else
     if grep -q "$BRAIN_DIR/.nanobrain/code/hooks/capture.sh" "$SETTINGS" 2>/dev/null; then
-      echo "[install] Stop hook already present in $SETTINGS"
+      echo "[install] capture hooks already present in $SETTINGS"
     else
       cp "$SETTINGS" "$SETTINGS.local-backup-$(date +%s)"
       if command -v jq >/dev/null 2>&1; then
@@ -95,13 +105,17 @@ else
         jq --arg cmd "$HOOK_CMD" '
           .hooks //= {} |
           .hooks.Stop //= [] |
-          .hooks.Stop += [{"matcher": "", "hooks": [{"type": "command", "command": $cmd}]}]
+          .hooks.SessionEnd //= [] |
+          .hooks.PreCompact //= [] |
+          .hooks.Stop += [{"matcher": "", "hooks": [{"type": "command", "command": $cmd}]}] |
+          .hooks.SessionEnd += [{"matcher": "", "hooks": [{"type": "command", "command": $cmd}]}] |
+          .hooks.PreCompact += [{"matcher": "", "hooks": [{"type": "command", "command": $cmd}]}]
         ' "$SETTINGS" > "$tmp" && mv "$tmp" "$SETTINGS" \
-          && echo "[install] Stop hook appended to $SETTINGS (backup created)" \
+          && echo "[install] capture hooks appended to $SETTINGS (Stop, SessionEnd, PreCompact; backup created)" \
           || { echo "[install] WARN: jq edit of settings.json failed; manual edit required" >&2; rm -f "$tmp"; }
       else
         echo "[install] WARN: jq missing; manual edit of $SETTINGS needed:" >&2
-        echo "         add Stop hook: $HOOK_CMD" >&2
+        echo "         add capture hooks (Stop, SessionEnd, PreCompact): $HOOK_CMD" >&2
       fi
     fi
   fi

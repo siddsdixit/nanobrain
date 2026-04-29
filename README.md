@@ -76,19 +76,21 @@ The brain reads itself. Improves itself. Spawns its own tools. **Forever-durable
 
 ---
 
-## Why this matters now
+## Why this matters
 
-Every major AI company is shipping Memory. Anthropic, Google, OpenAI all locked their version inside their own walled garden. Switch tools and you lose your context. Change pricing tiers and you lose history. Sunset the feature and your memory dies.
+This isn't memory. Memory is "what did I say last Tuesday." Vendor memory features handle that fine.
 
-`nanobrain` is the bet that **your second brain should outlive any one vendor's roadmap.** Plain markdown. Plain git. Read by every agent. Owned by you.
+The actual problem is your **knowledge corpus** lives half in your head, half in scattered notes, half in a thousand AI sessions you can't get back. Your voice. Your taste. Your decisions and the why behind them. Your relationships and how you talk to each one. Every AI agent you start fresh has to be brought up to speed.
 
-The capture loop wires into Claude Code today. The MCP server exposes your brain to any agent that speaks MCP.
+`nanobrain` is the bet that your knowledge corpus should be a first-class artifact: **captured automatically while you work, distilled in your voice, queryable by every agent you use, owned by you forever.** The brain builds itself. You don't have to remember to remember.
+
+Plain markdown. Plain git. Read by every agent. Outlives any one vendor's roadmap.
 
 ---
 
 ## Bootstrap
 
-You need [Claude Code](https://claude.com/claude-code), a GitHub account, macOS or Linux. Install in 2 minutes; first capture lands in 30.
+You need [Claude Code](https://claude.com/claude-code), a GitHub account, macOS or Linux. Install in 2 minutes. Sessions are queued instantly; the first distilled brain entry lands the next time your keyboard is idle for 5+ minutes.
 
 ```bash
 # 1. Clone the framework
@@ -97,18 +99,18 @@ git clone https://github.com/siddsdixit/nanobrain ~/nanobrain
 # 2. Create a PRIVATE repo for YOUR brain content
 gh repo create my-brain --private --clone
 
-# 3. Install (wires hooks, skills, and Stop hook into Claude Code)
+# 3. Install (wires capture hooks + idle distill drainer + skills)
 bash ~/nanobrain/install.sh ~/my-brain \
   --work you@company.com \
   --personal you@gmail.com \
   --gh-repo my-brain
 
-# 4. Open Claude Code anywhere and have a conversation
-# End the session. Then:
+# 4. Use Claude Code normally. Step away from the keyboard at some point.
+# A few minutes after you go idle:
 cat ~/my-brain/brain/decisions.md
 ```
 
-Every session end triggers a throttled, secrets-redacted extract into your private brain. The capture hook fires every 30 minutes (or on 5KB of new transcript), so the first useful entries land within the first half-hour of normal use.
+Capture wires into Claude Code's `Stop`, `SessionEnd`, and `PreCompact` hooks — each is a sub-50ms file append, invisible to you. The distill drainer runs every 30 min via launchd but only does LLM work when your keyboard's been idle for 5+ minutes (or your lid is closed). The brain builds itself in the background; you never wait on it.
 
 ---
 
@@ -118,7 +120,7 @@ Three loops, each one bash-only and reversible.
 
 | Loop | What ships | How it works |
 |---|---|---|
-| **Capture** | Stop hook + 5 source ingests (gmail, gcal, gdrive, slack, claude) | Throttled (30 min / 5KB delta). Secrets-redacted by `code/lib/redact.sh` (OpenAI, Anthropic, GitHub, AWS, Slack, JWT, Bearer, inline `api_key=`). Tested in CI. |
+| **Capture** | Always-on hook + 5 source ingests (gmail, gcal, gdrive, slack, claude) | Hook is a sub-50ms file append, never blocks you. Distill happens later via an idle-gated background drainer (every 30 min, only when the keyboard's been quiet ≥5 min). Secrets-redacted by `code/lib/redact.sh` (OpenAI, Anthropic, GitHub, AWS, Slack, JWT, Bearer, inline `api_key=`). Tested in CI. |
 | **Query** | `/brain` slash command + MCP server | Agents read brain files through `read_brain_file` with context-filter enforcement (work / personal). Firehoses (raw.md, INBOX.md) are refused. |
 | **Maintain** | `/brain-compact` weekly, `/brain-evolve` monthly, `/brain-restore` on demand | Compact dedupes and archives stale entries. Evolve proposes one targeted edit per cycle. Restore creates a branch from any git tag — never resets, never force-pushes. |
 

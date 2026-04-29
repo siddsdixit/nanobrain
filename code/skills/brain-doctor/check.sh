@@ -62,6 +62,27 @@ else
 fi
 echo
 
+echo "-- capture queue --"
+queue_dir="$BRAIN_DIR/data/claude/queue"
+if [ -d "$queue_dir" ]; then
+  pending_count=$(ls "$queue_dir"/*.pending 2>/dev/null | wc -l | tr -d ' ')
+  failed_count=$(ls "$queue_dir"/*.failed 2>/dev/null | wc -l | tr -d ' ')
+  done_count=$(ls "$queue_dir"/*.done 2>/dev/null | wc -l | tr -d ' ')
+  printf '  pending: %s\n  failed:  %s\n  done:    %s\n' "$pending_count" "$failed_count" "$done_count"
+  if [ "$failed_count" -gt 0 ]; then
+    echo "  WARNING: $failed_count failed entries (see below). Likely cause: distill timeout or claude -p error."
+    for f in "$queue_dir"/*.failed; do
+      [ -f "$f" ] || continue
+      printf '    - %s\n' "$(basename "$f")"
+      sed 's/^/      /' "$f" | head -3
+    done
+    echo "  Fix: review entries above. Retry: rename .failed → .pending. Discard: rm <file>."
+  fi
+else
+  echo "  (queue not initialized yet — run a Claude session to populate)"
+fi
+echo
+
 echo "-- inbox sizes --"
 for src in claude gmail gcal gdrive slack; do
   f="$BRAIN_DIR/data/$src/INBOX.md"
