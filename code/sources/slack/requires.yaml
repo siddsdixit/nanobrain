@@ -1,0 +1,9 @@
+source: slack
+mcp_server: claude_ai_Slack
+windows:
+  work: 30
+  personal: 30
+fetch:
+  via: NANOBRAIN_SLACK_STUB | mcp_bridge
+schedule:
+  cron_minutes: 60

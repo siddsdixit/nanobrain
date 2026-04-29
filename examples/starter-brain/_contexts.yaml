@@ -1,0 +1,11 @@
+version: 1
+defaults:
+  context: personal
+contexts:
+  personal: {}
+resolvers:
+  gmail: []
+  gcal: []
+  gdrive: []
+  slack: []
+  claude: []

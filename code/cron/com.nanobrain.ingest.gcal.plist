@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.nanobrain.ingest.gcal</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>__BRAIN_DIR__/.nanobrain/code/skills/brain-ingest/dispatch.sh</string>
+    <string>gcal</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>BRAIN_DIR</key><string>__BRAIN_DIR__</string>
+    <key>NANOBRAIN_DIR</key><string>__BRAIN_DIR__/.nanobrain</string>
+  </dict>
+  <key>StartInterval</key><integer>3600</integer>
+  <key>StandardOutPath</key><string>__BRAIN_DIR__/data/_logs/ingest.gcal.log</string>
+  <key>StandardErrorPath</key><string>__BRAIN_DIR__/data/_logs/ingest.gcal.err</string>
+</dict>
+</plist>

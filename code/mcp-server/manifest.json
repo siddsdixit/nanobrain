@@ -1,0 +1,18 @@
+{
+  "name": "nanobrain",
+  "version": "2.0.0",
+  "tools": [
+    {
+      "name": "read_brain_file",
+      "description": "Read a brain file as a calling agent, with context filter applied.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "agent": { "type": "string", "description": "Path to agent .md file (frontmatter declares context_in)." },
+          "file":  { "type": "string", "description": "Brain-relative path, e.g. brain/decisions.md." }
+        },
+        "required": ["agent", "file"]
+      }
+    }
+  ]
+}

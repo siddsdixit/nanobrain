@@ -1,0 +1,15 @@
+source: gmail
+mcp_server: claude_ai_Gmail
+windows:
+  work: 9
+  personal: 1095
+filter_patterns:
+  - noreply
+  - notifications
+  - automated
+  - "@github.com"
+  - newsletter
+fetch:
+  via: NANOBRAIN_GMAIL_STUB | mcp_bridge
+schedule:
+  cron_minutes: 30

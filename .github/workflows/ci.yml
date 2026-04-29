@@ -1,0 +1,42 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  redact:
+    runs-on: ubuntu-latest
+    name: secrets filter
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify redact strips known token formats
+        run: |
+          set -euo pipefail
+          INPUT='sk-abc123def456ghi789jkl012
+AKIA0123456789ABCDEF
+ghp_abcdefghijklmnopqrstuvwxyz0123456789
+xoxb-12345-67890-abcdefghijkl
+Bearer eyJhbGciOiJ.eyJzdWIiOiJ.signature
+api_key=hunter2
+password=correct-horse-battery-staple'
+          OUTPUT=$(printf '%s\n' "$INPUT" | bash code/lib/redact.sh)
+          echo "$OUTPUT"
+          echo "$OUTPUT" | grep -q 'sk-abc' && { echo "FAIL: OpenAI key leaked"; exit 1; } || true
+          echo "$OUTPUT" | grep -q 'AKIA0' && { echo "FAIL: AWS key leaked"; exit 1; } || true
+          echo "$OUTPUT" | grep -q 'ghp_abcdef' && { echo "FAIL: GitHub token leaked"; exit 1; } || true
+          echo "$OUTPUT" | grep -q 'xoxb-12345-67890' && { echo "FAIL: Slack token leaked"; exit 1; } || true
+          echo "$OUTPUT" | grep -q 'hunter2' && { echo "FAIL: api_key value leaked"; exit 1; } || true
+          echo "$OUTPUT" | grep -q 'correct-horse' && { echo "FAIL: password value leaked"; exit 1; } || true
+          echo "OK: all token formats redacted"
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    name: shellcheck
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint shell scripts
+        run: |
+          shellcheck --severity=error code/lib/*.sh code/hooks/*.sh code/cron/*.sh code/skills/*/*.sh code/sources/*/*.sh install.sh || true

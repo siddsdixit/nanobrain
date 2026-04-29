@@ -1,0 +1,6 @@
+.DS_Store
+.harvey-logs/
+*.log
+.cache/
+.tmp/
+tests/

@@ -1,0 +1,9 @@
+source: gdrive
+mcp_server: claude_ai_GDrive
+windows:
+  work: 9
+  personal: 730
+fetch:
+  via: NANOBRAIN_GDRIVE_STUB | mcp_bridge
+schedule:
+  cron_minutes: 120

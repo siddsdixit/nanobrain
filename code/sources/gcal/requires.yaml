@@ -1,0 +1,9 @@
+source: gcal
+mcp_server: claude_ai_GCal
+windows:
+  work: 9
+  personal: 1095
+fetch:
+  via: NANOBRAIN_GCAL_STUB | mcp_bridge
+schedule:
+  cron_minutes: 60

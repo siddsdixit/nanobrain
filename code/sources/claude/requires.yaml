@@ -1,0 +1,6 @@
+source: claude
+mcp_server: none
+fetch:
+  via: stop_hook
+schedule:
+  cron_minutes: 0

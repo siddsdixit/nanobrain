@@ -1,0 +1,30 @@
+version: 1
+
+defaults:
+  context: personal
+
+# Two contexts maximum. Solo users keep just `personal` and delete `work`.
+contexts:
+  work: {}
+  personal: {}
+
+resolvers:
+  gmail:
+    - { match: { from: "@company\\.com$" }, context: work }
+    - { match: { from: "@gmail\\.com$" }, context: personal }
+
+  gcal:
+    - { match: { calendar_id: "^user@company\\.com$" }, context: work }
+    - { match: { calendar_id: "^user@gmail\\.com$" }, context: personal }
+
+  gdrive:
+    - { match: { path_glob: "**/work/**" }, context: work }
+    - { match: { path_glob: "**" }, context: personal }
+
+  slack:
+    - { match: { workspace_id: "T123ABC" }, context: work }
+    - { match: { workspace_id: "T999XYZ" }, context: personal }
+
+  claude:
+    - { match: { path_glob: "**/work/**" }, context: work }
+    - { match: { path_glob: "**" }, context: personal }
