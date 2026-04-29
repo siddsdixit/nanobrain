@@ -43,6 +43,7 @@ html, body { margin: 0; padding: 0; }
 
 body {
   font-family: var(--sans);
+  font-size: 18px;
   font-feature-settings: "ss01", "cv11", "calt";
   color: var(--ink);
   background: var(--bg);
@@ -120,7 +121,7 @@ strong { color: var(--ink); font-weight: 600; }
 }
 .brand:hover { color: var(--ink); }
 .brand-mark { color: var(--coral); display: inline-flex; }
-.brand-name { font-size: 17px; }
+.brand-name { font-size: 19px; }
 .nav-links {
   display: flex;
   align-items: center;
@@ -128,7 +129,7 @@ strong { color: var(--ink); font-weight: 600; }
 }
 .nav-links a {
   color: var(--ink-mute);
-  font-size: 14px;
+  font-size: 15px;
   padding: 8px 14px;
   border-radius: var(--radius-sm);
   transition: color .15s ease, background .15s ease;
@@ -171,7 +172,7 @@ strong { color: var(--ink); font-weight: 600; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink-mute);
   background: rgba(240,224,208,0.04);
