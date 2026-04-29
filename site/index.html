@@ -36,7 +36,7 @@
       <a href="#how">How it works</a>
       <a href="#commands">Commands</a>
       <a href="#install">Install</a>
-      <a href="#lineage">Lineage</a>
+      <a href="#faq">FAQ</a>
       <a href="https://github.com/siddsdixit/nanobrain" class="nav-cta">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
         GitHub
@@ -51,7 +51,7 @@
   <div class="container">
     <div class="hero-eyebrow">
       <span class="dot-pulse" aria-hidden="true"></span>
-      v2.1 — research preview
+      v2.1 · research preview
     </div>
 
     <h1 class="hero-title">
@@ -113,62 +113,89 @@
   </div>
 </section>
 
+<section class="lineage-top">
+  <div class="container narrow">
+    <div class="badge-row">
+      <span class="badge">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 6.5l-7 4v7l7 4 7-4v-7l-7-4z"/><path d="M12 6.5V14"/><path d="M5 10.5L12 14l7-3.5"/></svg>
+        Built on Karpathy's LLM Wiki pattern
+      </span>
+    </div>
+    <p class="prose centered">
+      In <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">April 2026,
+      Andrej Karpathy described the pattern</a>: three-layer corpus (raw / wiki / schema),
+      immutable raw firehose, LLM-owned wiki, schema co-evolution via ADRs, git-native, source-dated
+      entries. <strong>What he described as a personal practice, nanobrain ships as a framework.</strong>
+    </p>
+  </div>
+</section>
+
 <section id="how" class="how">
   <div class="container">
     <div class="section-head">
       <span class="kicker">how it works</span>
-      <h2 class="section-h2">Three layers. Always-on capture. Idle-time distill.</h2>
+      <h2 class="section-h2">Three loops. Always-on capture. Idle-time distill.</h2>
+      <p class="section-lede">Each loop is bash-only and reversible. None of them ever block your terminal.</p>
     </div>
 
     <div class="layers">
       <article class="layer">
-        <div class="layer-num">01</div>
-        <h3>Capture</h3>
+        <div class="layer-num">01 · Capture</div>
+        <h3>Hook is a file append.</h3>
         <p>
-          Every Claude Code session fires a hook. The hook does <strong>one thing</strong>: append a
-          50-millisecond pointer to a queue. No LLM, no commit, no waiting.
-          You never feel it.
+          Stop, SessionEnd, and PreCompact each fire a sub-50ms append into a queue.
+          <strong>No LLM, no commit, no waiting</strong> — you can't feel it.
+          Plus 5 source ingests (gmail, gcal, gdrive, slack, claude) on schedule.
         </p>
       </article>
       <article class="layer">
-        <div class="layer-num">02</div>
-        <h3>Distill</h3>
+        <div class="layer-num">02 · Distill</div>
+        <h3>LLM only when you're idle.</h3>
         <p>
-          A background drainer wakes every 30 minutes. It checks if you're idle. If you're typing,
-          it skips. If you've been quiet for 5+ minutes, it pulls one session from the queue and
-          distills it into your brain — in your voice.
+          A background drainer wakes every 30 minutes. If you're typing, it skips.
+          If you've been quiet 5+ minutes, it pulls one queued session and distills
+          it into your brain — in your voice. Hard timeout 3 min per call.
         </p>
       </article>
       <article class="layer">
-        <div class="layer-num">03</div>
-        <h3>Query</h3>
+        <div class="layer-num">03 · Query</div>
+        <h3>Read from any agent.</h3>
         <p>
-          <code>/brain who is jane</code>. <code>/brain links ledger</code>. Or wire any agent
-          (Claude, Cursor, Codex, Gemini, Aider) through MCP — they all read the same markdown,
-          context-filtered.
+          <code>/brain who is jane</code>. Or wire any MCP-aware agent
+          (Claude, Cursor, Codex, Gemini, Aider) at <code>code/mcp-server/</code>.
+          Context-filtered: agents only see their declared scope.
         </p>
       </article>
     </div>
 
     <div class="flow">
-<pre>Claude session →   <span class="flow-arrow">┌────────────────────────────────────────────┐</span>
-  Gmail thread →   <span class="flow-arrow">│  hook: 50ms pointer → queue/*.pending     │</span>
-  Calendar     →   <span class="flow-arrow">│  drainer (idle): distill → brain/*.md     │</span>
-  Slack        →   <span class="flow-arrow">│  graph: [[wikilinks]] auto-indexed        │</span>
-                   <span class="flow-arrow">└────────────────────────────────────────────┘</span>
+<pre>Claude session →   <span class="flow-arrow">┌────────────────────────────────────────────────┐</span>
+  Gmail thread →   <span class="flow-arrow">│  hook (50ms)  → data/&lt;src&gt;/INBOX.md (firehose) │</span>
+  Calendar     →   <span class="flow-arrow">│  drainer      → brain/&lt;file&gt;.md   (distilled)  │</span>
+  Google Drive →   <span class="flow-arrow">│  raw mirror   → brain/raw.md      (full copy)  │</span>
+  Slack        →   <span class="flow-arrow">│  graph        → brain/_graph.md   (auto-link)  │</span>
+                   <span class="flow-arrow">└────────────────────────────────────────────────┘</span>
                                        │
                                        ▼
                        <span class="flow-cmd">/brain who is jane</span>
                        <span class="flow-cmd">/brain links project-x</span>
-                       <span class="flow-cmd">/brain spawn branding-agent</span></pre>
+                       <span class="flow-cmd">/brain spawn branding-agent</span>
+                       <span class="flow-cmd">/brain compact   ← weekly</span>
+                       <span class="flow-cmd">/brain evolve    ← monthly</span></pre>
     </div>
+
+    <p class="how-foot">
+      Plus per-entity pages (<code>brain/people/&lt;slug&gt;.md</code>, <code>brain/projects/&lt;slug&gt;.md</code>),
+      <code>[[wikilink]]</code> backlink graph, operation log, auto-generated brain index, lint, integrity hash,
+      agent foundry. Full surface in <a href="#commands">the 17 commands</a>.
+    </p>
   </div>
 </section>
 
 <section class="contrast">
   <div class="container">
     <div class="section-head">
-      <span class="kicker">why it's different</span>
+      <span class="kicker">how it compares</span>
       <h2 class="section-h2">Every other "memory" tool locks you in. This one outlives them.</h2>
     </div>
 
@@ -178,20 +205,23 @@
           <tr>
             <th></th>
             <th><strong>nanobrain</strong></th>
-            <th>Claude Memory</th>
-            <th>ChatGPT Memory</th>
+            <th>Anthropic Memory</th>
+            <th>OpenAI Memory</th>
             <th>Mem0 / Letta</th>
-            <th>Notion AI</th>
+            <th>Notion / Reflect</th>
+            <th>Vector RAG</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>Plain markdown</td><td class="yes">●</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-          <tr><td>Works without internet</td><td class="yes">●</td><td>—</td><td>—</td><td class="meh">○</td><td>—</td></tr>
-          <tr><td>You own the data</td><td class="yes">●</td><td>—</td><td>—</td><td class="meh">○</td><td>—</td></tr>
-          <tr><td>Readable in 50 years</td><td class="yes">●</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-          <tr><td>Multi-agent (Claude / Cursor / Codex / Gemini)</td><td class="yes">●</td><td>—</td><td>—</td><td class="meh">○</td><td>—</td></tr>
-          <tr><td>Greppable from your terminal</td><td class="yes">●</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-          <tr><td>Open source</td><td class="yes">● MIT</td><td>—</td><td>—</td><td>mixed</td><td>—</td></tr>
+          <tr><td>Markdown native</td><td class="yes">●</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td>Works without internet</td><td class="yes">●</td><td>—</td><td>—</td><td class="meh">○</td><td>—</td><td>—</td></tr>
+          <tr><td>You own the data</td><td class="yes">●</td><td>—</td><td>—</td><td class="meh">○</td><td>—</td><td class="meh">○</td></tr>
+          <tr><td>Readable in 50 years</td><td class="yes">●</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td>Self-improving</td><td class="yes">●</td><td class="yes">●</td><td class="yes">●</td><td class="meh">○</td><td>—</td><td>—</td></tr>
+          <tr><td>Multi-agent (Claude / Cursor / Codex / Gemini)</td><td class="yes">●</td><td>—</td><td>—</td><td class="meh">○</td><td>—</td><td class="meh">○</td></tr>
+          <tr><td>Token cost is constant</td><td class="yes">●</td><td>n/a</td><td>n/a</td><td>n/a</td><td>n/a</td><td>—</td></tr>
+          <tr><td>Readable by grep</td><td class="yes">●</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td>Open source</td><td class="yes">● MIT</td><td>—</td><td>—</td><td class="meh">mixed</td><td>—</td><td class="meh">mixed</td></tr>
         </tbody>
       </table>
     </div>
@@ -202,49 +232,89 @@
   <div class="container">
     <div class="section-head">
       <span class="kicker">17 commands</span>
-      <h2 class="section-h2">Five you'll use daily. Twelve more when you need them.</h2>
+      <h2 class="section-h2">Three groups. Daily use. Maintenance. Recovery.</h2>
+      <p class="section-lede">All idempotent. All reversible via <code>git revert</code> (except <code>/brain-redact</code>, which rewrites history by design).</p>
     </div>
 
-    <div class="cmd-grid">
-      <article class="cmd-card cmd-primary">
+    <h3 class="cmd-group-title">Daily use · the loop you live in</h3>
+    <div class="cmd-table">
+      <div class="cmd-row">
         <code>/brain</code>
-        <p>Query the brain. Who is X. What's connected to Y. Where does Z live.</p>
-      </article>
-      <article class="cmd-card cmd-primary">
+        <p>Query the brain. Subcommands: <code>paths</code> (where files live), <code>status</code> (last commit + corpus sizes), <code>links &lt;entity&gt;</code> (every <code>[[backlink]]</code> across the corpus).</p>
+      </div>
+      <div class="cmd-row">
         <code>/brain-save</code>
-        <p>Force-save a decision or learning mid-session. Routes to the right file, redacts secrets, commits.</p>
-      </article>
-      <article class="cmd-card cmd-primary">
+        <p>Force-save a decision or learning mid-session. Routes to the right category file, redacts secrets, mirrors to <code>raw.md</code>, commits. Optional <code>--page &lt;slug&gt;</code> appends to a per-entity page.</p>
+      </div>
+      <div class="cmd-row">
+        <code>/brain-ingest</code>
+        <p>Pull one source into its <code>INBOX.md</code> (gmail, gcal, gdrive, slack, claude). Resolver auto-tags each entry with <code>{context: work | personal}</code>. Secrets stripped before write.</p>
+      </div>
+      <div class="cmd-row">
+        <code>/brain-distill</code>
+        <p>Read a source's <code>INBOX.md</code>, run an LLM pass to extract signal, append targeted blocks to <code>brain/&lt;file&gt;.md</code> + a full mirror to <code>raw.md</code>. The drainer chains ingest → distill automatically.</p>
+      </div>
+      <div class="cmd-row">
         <code>/brain-spawn</code>
-        <p>Mint a specialized agent with declared scope. Branding agent on the work side. Investing agent on the personal side. Each one boundary-locked.</p>
-      </article>
-      <article class="cmd-card cmd-primary">
+        <p>Mint a specialized agent with declared <code>context_in</code>, <code>reads</code>, <code>writes</code>. A branding agent on the work side. An investing agent on personal. Boundary-locked, refuses firehoses by default.</p>
+      </div>
+      <div class="cmd-row">
+        <code>/brain-init</code>
+        <p>Bootstrap a new brain. Scaffolds <code>brain/_contexts.yaml</code>, builds resolver patterns from your work / personal email flags. <code>install.sh</code> calls it for you.</p>
+      </div>
+      <div class="cmd-row">
         <code>/brain-doctor</code>
-        <p>Health check. Sources, contexts, GitHub sync, queue state, failed entries with retry hints.</p>
-      </article>
-      <article class="cmd-card cmd-primary">
-        <code>/brain-restore</code>
-        <p>Non-destructive time travel. Branches from any git tag. Never resets, never force-pushes, never destroys current work.</p>
-      </article>
+        <p>Health check. Validates contexts, lists configured sources, pings the MCP server, surfaces failed queue entries with retry hints, and reports GitHub push failures.</p>
+      </div>
     </div>
 
-    <details class="cmd-more">
-      <summary>And twelve more — ingest, distill, init, index, log, lint, graph, hash, compact, evolve, checkpoint, redact</summary>
-      <div class="cmd-more-list">
-        <p><code>/brain-ingest</code> · pull one source into INBOX</p>
-        <p><code>/brain-distill</code> · distill INBOX entries into brain files</p>
-        <p><code>/brain-init</code> · scaffold a new brain</p>
-        <p><code>/brain-index</code> · rebuild the entity catalog</p>
-        <p><code>/brain-log</code> · append one operation line, greppable</p>
-        <p><code>/brain-lint</code> · catch orphan pages, broken refs, missing tags</p>
-        <p><code>/brain-graph</code> · rebuild [[wikilink]] backlink index</p>
-        <p><code>/brain-hash</code> · integrity check via BRAIN_HASH.txt</p>
-        <p><code>/brain-compact</code> · weekly cleanup, archives stale entries</p>
-        <p><code>/brain-evolve</code> · monthly self-improvement proposal</p>
-        <p><code>/brain-checkpoint</code> · force-capture mid-session</p>
-        <p><code>/brain-redact</code> · scrub a leaked secret from history</p>
+    <h3 class="cmd-group-title">Maintenance · sleep cycles + integrity</h3>
+    <div class="cmd-table">
+      <div class="cmd-row">
+        <code>/brain-compact</code>
+        <p>Weekly cleanup. Dedupes duplicate dated headers, archives entries older than 365 days, regenerates the graph, verifies the integrity hash, commits. Mechanical only — no LLM.</p>
       </div>
-    </details>
+      <div class="cmd-row">
+        <code>/brain-evolve</code>
+        <p>Monthly self-improvement. Reads the last 30 days of signal, proposes ONE targeted edit to a brain file, written to <code>code/agents/_proposed/</code>. You review and <code>mv</code> to apply. Single-shot, never auto-applied.</p>
+      </div>
+      <div class="cmd-row">
+        <code>/brain-checkpoint</code>
+        <p>Force-capture mid-session. Bypasses the throttle. For risky changes, end of long sessions, or guaranteed capture before disconnecting.</p>
+      </div>
+      <div class="cmd-row">
+        <code>/brain-graph</code>
+        <p>Rebuild <code>brain/_graph.md</code> — inverted index of every <code>[[wikilink]]</code> across the corpus, organized by entity with file:line backlinks. Excludes raw.md and interactions.md.</p>
+      </div>
+      <div class="cmd-row">
+        <code>/brain-index</code>
+        <p>Rebuild <code>brain/index.md</code> — categorized catalog of every brain file with one-line summaries, per-entity tally, sources table. The TOC for the corpus.</p>
+      </div>
+      <div class="cmd-row">
+        <code>/brain-lint</code>
+        <p>Static analysis. Catches orphan pages, broken refs, TODO/FIXME markers, duplicate dated headers, missing <code>{context:}</code> tags. <code>--strict</code> exits 1 for CI.</p>
+      </div>
+      <div class="cmd-row">
+        <code>/brain-log</code>
+        <p>Append one operation line to <code>brain/log.md</code> in <code>## [YYYY-MM-DD HH:MM] op | title</code> format. Greppable. Called automatically by every other skill.</p>
+      </div>
+      <div class="cmd-row">
+        <code>/brain-hash</code>
+        <p>Build or verify <code>BRAIN_HASH.txt</code> — hash of canonical brain files (excludes raw.md and archives). Detects accidental corruption or drift.</p>
+      </div>
+    </div>
+
+    <h3 class="cmd-group-title">Recovery · when something goes wrong</h3>
+    <div class="cmd-table">
+      <div class="cmd-row">
+        <code>/brain-restore</code>
+        <p>Non-destructive time travel. Lists all git tag checkpoints, creates a new <code>restore/&lt;sha&gt;</code> branch from any chosen point. Never resets HEAD, never force-pushes, never destroys current work.</p>
+      </div>
+      <div class="cmd-row">
+        <code>/brain-redact</code>
+        <p>Last-resort secret scrub. Pattern-matches a leaked secret across all of git history, rewrites blobs, force-pushes the cleaned history, logs the redaction. Destructive by design — always <code>--dry-run</code> first.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -253,6 +323,7 @@
     <div class="section-head">
       <span class="kicker">bootstrap</span>
       <h2 class="section-h2">Two minutes to install. The brain takes it from there.</h2>
+      <p class="section-lede">You need <a href="https://claude.com/claude-code">Claude Code</a>, a GitHub account, macOS or Linux. Sessions queue instantly; the first distilled entry lands the next time your keyboard is idle 5+ minutes.</p>
     </div>
 
     <div class="install-steps">
@@ -279,7 +350,7 @@ bash ~/nanobrain/install.sh ~/my-brain \
 
       <div class="install-step">
         <div class="install-num">04</div>
-        <pre><code><span class="cmt"># Use Claude Code normally. Step away at some point.</span>
+        <pre><code><span class="cmt"># Use Claude Code normally. Step away from the keyboard.</span>
 <span class="cmt"># A few minutes after you go idle:</span>
 cat ~/my-brain/brain/decisions.md</code></pre>
       </div>
@@ -287,10 +358,10 @@ cat ~/my-brain/brain/decisions.md</code></pre>
 
     <p class="install-note">
       Capture wires into Claude Code's <code>Stop</code>, <code>SessionEnd</code>, and
-      <code>PreCompact</code> hooks — each is a sub-50ms file append, invisible to you.
+      <code>PreCompact</code> hooks. Each is a sub-50ms file append, invisible to you.
       The distill drainer runs every 30 min via <code>launchd</code>, but only does LLM work
-      when your keyboard's been idle for 5+ minutes. The brain builds itself in the background.
-      You never wait on it.
+      when your keyboard's been idle for 5+ minutes (or your lid is closed). The brain builds
+      itself in the background. You never wait on it.
     </p>
   </div>
 </section>
@@ -302,36 +373,94 @@ cat ~/my-brain/brain/decisions.md</code></pre>
       <h2 class="section-h2">Read from any agent. Capture from Claude today, the rest in v2.2.</h2>
     </div>
     <div class="tools-grid">
-      <article class="tool"><h3>Claude Code</h3><p>Native capture via Stop hook.<br/>Read via MCP.</p><span class="tool-badge tool-badge-ok">read · capture</span></article>
-      <article class="tool"><h3>Codex CLI</h3><p>Read via MCP today.<br/>Capture wrapper in v2.2.</p><span class="tool-badge">read</span></article>
-      <article class="tool"><h3>Cursor</h3><p>Read via MCP today.<br/>Capture wrapper in v2.2.</p><span class="tool-badge">read</span></article>
-      <article class="tool"><h3>Gemini CLI</h3><p>Read via MCP today.<br/>Capture wrapper in v2.2.</p><span class="tool-badge">read</span></article>
-      <article class="tool"><h3>Aider</h3><p>Read via MCP today.<br/>Capture wrapper in v2.2.</p><span class="tool-badge">read</span></article>
+      <article class="tool"><h3>Claude Code</h3><p>Native capture via Stop, SessionEnd, PreCompact hooks. Read via MCP.</p><span class="tool-badge tool-badge-ok">read · capture</span></article>
+      <article class="tool"><h3>Codex CLI</h3><p>Read via MCP today. <code>AGENTS.md</code> auto-loads. Capture wrapper in v2.2.</p><span class="tool-badge">read</span></article>
+      <article class="tool"><h3>Cursor</h3><p>Read via MCP today. <code>.cursorrules</code> auto-loads. Capture wrapper in v2.2.</p><span class="tool-badge">read</span></article>
+      <article class="tool"><h3>Gemini CLI</h3><p>Read via MCP today. <code>GEMINI.md</code> auto-loads. Capture wrapper in v2.2.</p><span class="tool-badge">read</span></article>
+      <article class="tool"><h3>Aider</h3><p>Read via MCP today. <code>AGENTS.md</code> inherits. Capture wrapper in v2.2.</p><span class="tool-badge">read</span></article>
     </div>
+    <p class="works-foot">Setup per tool: <a href="https://github.com/siddsdixit/nanobrain/blob/main/docs/COMPATIBILITY.md">docs/COMPATIBILITY.md</a>.</p>
   </div>
 </section>
 
-<section id="lineage" class="lineage">
+<section id="faq" class="faq">
   <div class="container narrow">
-    <div class="section-head centered">
-      <span class="kicker">lineage</span>
-      <h2 class="section-h2">Built on Karpathy's LLM Wiki pattern.</h2>
+    <div class="section-head">
+      <span class="kicker">faq</span>
+      <h2 class="section-h2">Questions you'd ask before installing.</h2>
     </div>
-    <p class="prose">
-      In <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">April 2026,
-      Andrej Karpathy described the pattern</a>: three-layer corpus (raw / wiki / schema),
-      immutable raw firehose, LLM-owned wiki, schema co-evolution via ADRs, git-native, source-dated
-      entries.
-    </p>
-    <p class="prose">
-      What Karpathy described as a personal practice, <strong>nanobrain ships as a framework</strong>:
-      same structure, same discipline, plus the capture loop, lint, index, log, and graph machinery
-      that keep the corpus honest at scale.
-    </p>
+
+    <details class="faq-item" open>
+      <summary>How is this different from Anthropic Memory / ChatGPT Memory / Gemini Memory?</summary>
+      <p>Those are vendor-locked. Switch tools and you lose your memory. nanobrain is markdown plus git in your own repo. Read by Claude today, readable by any agent or human tomorrow.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Does it leak my secrets to Anthropic when capture runs?</summary>
+      <p>No. <code>code/lib/redact.sh</code> runs over every transcript delta before <code>claude -p</code> ever sees it, stripping common token formats (OpenAI, Anthropic, GitHub, AWS, Slack, JWT, Bearer, inline <code>api_key=</code>). Tested in CI. Best-effort — use <code>/brain-redact &lt;pattern&gt;</code> if anything slips through.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Why not Obsidian / Logseq / Reflect?</summary>
+      <p>Great UIs. Not multi-agent context substrates. nanobrain is the substrate. Obsidian works fine on top since it reads the same markdown.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Why not a vector DB?</summary>
+      <p>Token-budget protected, deterministic, greppable, inheritable. Add a vector layer later if you want. Markdown stays the source of truth.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Why not just CLAUDE.md?</summary>
+      <p>CLAUDE.md is one file. nanobrain is a corpus that grows, distills, self-lints, and protects itself.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Will my brain leak through commits?</summary>
+      <p>Two repos. The public framework never sees your content. Your private brain is yours. Push failures surface immediately in <code>/brain-doctor</code>.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>What if I want to leave?</summary>
+      <p><code>cat brain/self.md</code>. That is your exit strategy. No migrations, no exports, no vendor permission required.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Does it work on Linux?</summary>
+      <p>The bash core works on Linux 3.2+. The launchd cron plists are macOS-only — on Linux, add equivalent cron entries manually. See <code>code/cron/</code>.</p>
+    </details>
+  </div>
+</section>
+
+<section class="roadmap">
+  <div class="container narrow">
+    <div class="section-head">
+      <span class="kicker">roadmap</span>
+      <h2 class="section-h2">Where it's going.</h2>
+    </div>
+    <ul class="roadmap-list">
+      <li class="done"><span class="rm-tag">v2.0</span> 17 skills, 5 sources, MCP server, Karpathy alignment, 173/173 tests green</li>
+      <li class="done"><span class="rm-tag">v2.1</span> Multi-tool activation files (AGENTS.md, GEMINI.md, .cursorrules); read-side support via MCP for Codex / Cursor / Gemini / Aider</li>
+      <li class="done"><span class="rm-tag">v2.1.1</span> Split capture from distill (idle-gated drainer); 50ms hooks that never block you</li>
+      <li><span class="rm-tag">v2.2</span> Capture wrappers for Codex CLI / Cursor / Gemini CLI / Aider (session → distill on close)</li>
+      <li><span class="rm-tag">v2.3</span> Source plugins — voice memos, Granola meeting notes, repos</li>
+      <li><span class="rm-tag">v2.4</span> Browser extension for claude.ai / chatgpt.com / gemini.google.com</li>
+      <li><span class="rm-tag">v3.0</span> Optional vector sidecar (markdown stays source of truth), encrypted <code>data/_sensitive/</code></li>
+    </ul>
+  </div>
+</section>
+
+<section class="lineage">
+  <div class="container narrow">
+    <div class="section-head">
+      <span class="kicker">lineage</span>
+      <h2 class="section-h2">Standing on the shoulders of.</h2>
+    </div>
     <ul class="lineage-list">
-      <li><strong>Karpathy's <code>autoresearch</code></strong> · git history as agent memory</li>
-      <li><strong>Vannevar Bush's memex</strong> (1945) · the original associative trail</li>
-      <li><strong>Obsidian, Logseq, Roam</strong> · wikilinks as a primitive</li>
+      <li><strong>Andrej Karpathy's <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">LLM Wiki gist</a></strong> · the seed idea. Three-layer corpus, immutable raw, LLM-owned wiki, git-native.</li>
+      <li><strong>Karpathy's <a href="https://github.com/karpathy/autoresearch"><code>autoresearch</code></a></strong> · git history as agent memory.</li>
+      <li><strong>Vannevar Bush's memex</strong> (1945) · the original associative trail.</li>
+      <li><strong>Obsidian, Logseq, Roam</strong> · wikilinks as a primitive.</li>
     </ul>
   </div>
 </section>
