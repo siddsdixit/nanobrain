@@ -1,0 +1,34 @@
+# nanobrain — Cursor activation
+
+This file tells Cursor how to use the brain repo. Cursor auto-loads `.cursorrules` from the workspace root. For the newer `.cursor/rules/*.mdc` format, see [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md).
+
+## Boot sequence
+
+Before responding to any task, read these files from the brain root:
+
+1. brain/self.md — identity, voice, principles
+2. brain/goals.md — current and long-term goals
+3. brain/projects.md — active threads (index)
+4. brain/people.md — contacts (index)
+5. CONTEXT.md — what's literally happening this week
+
+For per-entity detail, read the linked file under brain/people/<slug>.md or brain/projects/<slug>.md.
+
+## Query the brain via MCP
+
+code/mcp-server/ exposes read_brain_file with context-filter enforcement. Configure Cursor's MCP support in Settings → Features → Model Context Protocol. Server entry point: code/mcp-server/server.sh.
+
+## Hard rules
+
+- Direct. No preamble. Lead with the point.
+- No em dashes. Use commas, periods, parentheses.
+- One sentence per decision. Suggest simpler approaches before implementing.
+- Max 4 files per response unless purely mechanical.
+- Never scaffold/create files unless asked.
+- Never create parallel implementations. Ask "replace or integrate?" first.
+- Read existing code first. Match existing patterns.
+- When in doubt, ask.
+
+## Capture
+
+Cursor does not emit a session-end hook usable by nanobrain. To capture a Cursor session into the brain, run /brain-save with key takeaways. A wrapper script for automatic capture lands in v2.2.

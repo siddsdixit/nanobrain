@@ -126,6 +126,20 @@ Plus: per-entity pages (`brain/people/<slug>.md`, `brain/projects/<slug>.md`), `
 
 ---
 
+## Works with
+
+| Tool | Read brain | Capture session |
+|---|---|---|
+| **Claude Code** | ✅ MCP | ✅ native Stop hook |
+| **Codex CLI** | ✅ MCP | 🟡 wrapper (v2.2) |
+| **Cursor** | ✅ MCP | 🟡 wrapper (v2.2) |
+| **Gemini CLI** | ✅ MCP | 🟡 wrapper (v2.2) |
+| **Aider** | ✅ MCP | 🟡 wrapper (v2.2) |
+
+Activation files at the repo root: `CLAUDE.md`, `AGENTS.md` (Codex / Aider), `GEMINI.md`, `.cursorrules`. Read side works today via MCP. Capture wrappers for non-Claude CLIs ship in v2.2. See [`docs/COMPATIBILITY.md`](docs/COMPATIBILITY.md) for setup per tool.
+
+---
+
 ## How it compares
 
 |  | nanobrain | Anthropic Memory | OpenAI Memory | Mem0 / Letta | Notion / Reflect | Vector RAG |
@@ -180,27 +194,41 @@ For the capture sequence and three-destination routing diagrams, see [`docs/ARCH
 
 ## The 17 commands
 
-```
-/brain            ←  query: paths / status / links
-/brain-save       ←  force-save a decision or insight mid-session
-/brain-ingest     ←  pull one source into INBOX
-/brain-distill    ←  distill INBOX entries into brain files
-/brain-init       ←  scaffold _contexts.yaml for a new brain
-/brain-doctor     ←  health check: contexts, sources, GitHub sync
-/brain-index      ←  rebuild brain/index.md catalog
-/brain-log        ←  append one op line to brain/log.md
-/brain-lint       ←  catch orphan pages, broken refs, missing context tags
-/brain-graph      ←  rebuild [[wikilink]] backlink index
-/brain-hash       ←  integrity check: build or verify BRAIN_HASH.txt
-/brain-spawn      ←  mint a new scoped agent from brain context
-/brain-compact    ←  weekly cleanup (dedupes, archives stale entries)
-/brain-evolve     ←  monthly self-improvement (one targeted proposal per cycle)
-/brain-checkpoint ←  force-capture mid-session
-/brain-redact     ←  scrub a leaked secret from git history (last resort)
-/brain-restore    ←  restore to any checkpoint via a new branch (non-destructive)
-```
+Three groups: **daily use** (the loop you live in), **maintenance** (sleep cycles + integrity), **recovery** (when something goes wrong).
 
-All idempotent. All reversible via `git revert` (except `/brain-redact` which rewrites history by design).
+### Daily use
+
+| Command | What it does | When to run |
+|---|---|---|
+| **/brain** | Query the brain. Subcommands: `paths` (where files live), `status` (last commit + corpus sizes), `links <entity>` (every `[[backlink]]` to a name across the corpus). | Anytime you need to look something up — who is X, what's connected to Y, where does Z live. |
+| **/brain-save** | Force-save a decision, learning, or note mid-session. Routes to the right category file (`decisions.md`, `learnings.md`, etc.), redacts secrets, mirrors to `raw.md`, commits. Optional `--page <slug>` appends a Mention bullet to a per-entity page. | When the capture hook hasn't fired yet but you've just made a real decision worth keeping. |
+| **/brain-ingest** | Pull one source into its `INBOX.md` (gmail, gcal, gdrive, slack, claude). Resolver auto-tags each entry with `{context: work\|personal}`. Secrets stripped before write. | Manually, or via the launchd plist that fires on a schedule per source. |
+| **/brain-distill** | Read a source's `INBOX.md`, run an LLM pass to extract signal, append targeted blocks to `brain/<file>.md` and a full mirror to `raw.md`. Commits with provenance. | After ingest. The Stop hook chains ingest → distill automatically; run manually for backfills. |
+| **/brain-spawn** | Create a specialized agent in `code/agents/<slug>.md` with declared scope (`context_in`, `reads`, `writes`). Spawned agents are context-filtered — they cannot read outside their declared boundaries even if they try. Refuses firehoses (`raw.md`, `interactions.md`) by default. | When a recurring task deserves its own scoped agent — e.g. a "branding" agent that only reads the work side of your brain, or an "investing" agent scoped to personal. |
+| **/brain-init** | Bootstrap a new brain: scaffolds `brain/_contexts.yaml`, sets up resolver patterns from your work / personal email flags, creates the directory layout. | Once, at install time. `install.sh` calls this for you. |
+| **/brain-doctor** | Health check. Validates `_contexts.yaml`, lists configured sources, pings the MCP server, reports inbox sizes, surfaces GitHub push failures (if `data/_logs/push_failed.txt` exists). | When something feels off, or any time the brain hasn't synced to GitHub recently. |
+
+### Maintenance
+
+| Command | What it does | When to run |
+|---|---|---|
+| **/brain-compact** | Weekly cleanup: dedupes duplicate dated headers, archives entries older than 365 days into `brain/archive/`, regenerates the graph, verifies the integrity hash, commits. Mechanical only — no LLM, no content rewrites. | Automatically every Monday via launchd, or `bash code/skills/brain-compact/compact.sh` manually. |
+| **/brain-evolve** | Monthly self-improvement. Reads the last 30 days of signal and proposes ONE targeted edit to a brain file, written to `code/agents/_proposed/evolve-<timestamp>.md`. You review and `mv` to apply. Single-shot, not auto-applied. | Automatically once a month via launchd, or trigger by hand when you suspect drift. |
+| **/brain-checkpoint** | Force-capture mid-session. Synthesizes a `Stop` hook payload with `FORCE_CAPTURE=1`, bypasses the throttle. | Before risky changes, end of a long session, or when you want a guaranteed capture before disconnecting. |
+| **/brain-graph** | Rebuild `brain/_graph.md` — an inverted index of every `[[wikilink]]` reference across the corpus, organized by entity with file:line backlinks. Excludes `raw.md` and `interactions.md`. | After bulk edits, or whenever `[[Person Name]]` references stop resolving. The compact pass calls this automatically. |
+| **/brain-index** | Rebuild `brain/index.md` — a categorized catalog of every brain file with one-line summaries, per-entity pages tally, sources table. The TOC for the corpus. | After adding new entity pages. The compact pass calls this automatically. |
+| **/brain-lint** | Static analysis on the corpus: orphan pages (no incoming `[[backlinks]]`), broken refs, TODO/FIXME markers, duplicate dated headers, entries missing `{context:}` tags. `--strict` exits 1 for CI. | Before publishing or sharing the brain externally. Also useful as a pre-commit hook locally. |
+| **/brain-log** | Append one operation line to `brain/log.md` in the format `## [YYYY-MM-DD HH:MM] <op> | <title>`. Greppable: `grep "^## \[" brain/log.md`. | Called automatically by every other skill. Manual invocation is rare. |
+| **/brain-hash** | Build or verify `BRAIN_HASH.txt` — a hash of the canonical brain files (excludes `raw.md` and archives). Detects accidental corruption or drift. | Before pushing, after `brain-restore`, or as a CI check. |
+
+### Recovery
+
+| Command | What it does | When to run |
+|---|---|---|
+| **/brain-restore** | Non-destructive time travel. Lists all git tags created by Harvey-style checkpoints, then creates a new `restore/<sha>` branch from any chosen point. Never resets HEAD, never force-pushes, never destroys current work. | When you need an older state for reference, or when something got accidentally overwritten. The restore branch lets you cherry-pick safely. |
+| **/brain-redact** | Last-resort secret scrub. Pattern-matches a leaked secret across all of git history, rewrites the affected blobs, force-pushes the cleaned history, logs the redaction. Destructive by design. | Only when a real secret slipped past `redact.sh` into a committed file. Always run `--dry-run` first. |
+
+All commands are idempotent. All commands except `/brain-redact` are reversible via `git revert`.
 
 ---
 
@@ -234,9 +262,10 @@ The bash core works on Linux 3.2+. The launchd cron plists are macOS-only -- on 
 
 ## Documentation
 
+- [ARCHITECTURE.md](docs/ARCHITECTURE.md) — system + capture flow + routing diagrams
+- [COMPATIBILITY.md](docs/COMPATIBILITY.md) — per-tool setup (Claude / Codex / Cursor / Gemini / Aider)
 - [PRD.md](docs/PRD.md) — product requirements (v1 reference; v2 simplifications in ADR 0001)
 - [SPEC.md](docs/SPEC.md) — engineering specification (27 stories, 6 phases)
-- [ARCHITECTURE.md](docs/ARCHITECTURE.md) — system + capture flow + routing diagrams
 - [ARCHITECTURE-DETAILED.md](docs/ARCHITECTURE-DETAILED.md) — deep dive (v1 reference)
 - [docs/sprints/](docs/sprints/) — sprint briefs S01–S09 (foundations → migration)
 - [docs/adr/](docs/adr/) — architecture decision records
@@ -255,9 +284,10 @@ The bash core works on Linux 3.2+. The launchd cron plists are macOS-only -- on 
 ## Roadmap
 
 - [x] v2.0: 17 skills, 5 sources (gmail/gcal/gdrive/slack/claude), MCP server, Karpathy alignment (index, log, lint), 173/173 tests green
-- [ ] v2.1: Codex CLI + Gemini CLI capture wrappers
-- [ ] v2.2: Source plugins — voice memos, Granola meeting notes, repos
-- [ ] v2.3: `nanobrain-web` browser extension for `claude.ai` / `chatgpt.com` / `gemini.google.com`
+- [x] v2.1: Multi-tool activation files (`AGENTS.md`, `GEMINI.md`, `.cursorrules`); read-side support via MCP for Codex / Cursor / Gemini / Aider
+- [ ] v2.2: Capture wrappers for Codex CLI / Cursor / Gemini CLI / Aider (session → distill on close)
+- [ ] v2.3: Source plugins — voice memos, Granola meeting notes, repos
+- [ ] v2.4: `nanobrain-web` browser extension for `claude.ai` / `chatgpt.com` / `gemini.google.com`
 - [ ] v3.0: Optional vector sidecar (markdown stays source of truth), encrypted `data/_sensitive/`
 
 ---
