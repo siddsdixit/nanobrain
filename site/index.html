@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>nanobrain · the second brain that thinks like you</title>
+<meta name="description" content="A knowledge corpus that captures your decisions, voice, and relationships while you work. Markdown plus git. Read by every AI agent. Yours forever." />
+<meta name="theme-color" content="#1a1614" />
+<meta property="og:title" content="nanobrain · the second brain that thinks like you" />
+<meta property="og:description" content="A knowledge corpus that captures your decisions, voice, and relationships while you work. Markdown plus git. Read by every AI agent. Yours forever." />
+<meta property="og:image" content="https://nanobrain.app/og.png" />
+<meta property="og:url" content="https://nanobrain.app" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="nanobrain · the second brain that thinks like you" />
+<meta name="twitter:description" content="A knowledge corpus that captures your decisions, voice, and relationships while you work. Markdown plus git. Read by every AI agent. Yours forever." />
+<meta name="twitter:image" content="https://nanobrain.app/og.png" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231a1614'/%3E%3Crect x='6' y='6' width='8' height='8' rx='1.5' fill='%23E08263'/%3E%3Crect x='18' y='6' width='8' height='8' rx='1.5' fill='%23E08263'/%3E%3Crect x='6' y='18' width='20' height='8' rx='1.5' fill='%23E08263'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://rsms.me/" />
+<link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="/" class="brand" aria-label="nanobrain home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="22" height="22"><rect x="6" y="6" width="8" height="8" rx="1.5" fill="currentColor"/><rect x="18" y="6" width="8" height="8" rx="1.5" fill="currentColor"/><rect x="6" y="18" width="20" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span>
+      <span class="brand-name">nanobrain</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#how">How it works</a>
+      <a href="#commands">Commands</a>
+      <a href="#install">Install</a>
+      <a href="#lineage">Lineage</a>
+      <a href="https://github.com/siddsdixit/nanobrain" class="nav-cta">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">
+      <span class="dot-pulse" aria-hidden="true"></span>
+      v2.1 — research preview
+    </div>
+
+    <h1 class="hero-title">
+      The second brain<br />that <em>thinks like you</em>.
+    </h1>
+
+    <p class="hero-lede">
+      A knowledge corpus that captures your decisions, voice, and relationships
+      while you work. Read by every AI agent. Yours forever.
+    </p>
+
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#install">Install in 2 minutes →</a>
+      <a class="btn btn-ghost" href="https://github.com/siddsdixit/nanobrain">★ Star on GitHub</a>
+    </div>
+
+    <div class="hero-meta">
+      <span><strong>Markdown</strong> · plain text, forever</span>
+      <span class="meta-sep" aria-hidden="true">·</span>
+      <span><strong>Git</strong> · own your history</span>
+      <span class="meta-sep" aria-hidden="true">·</span>
+      <span><strong>Vendor-neutral</strong> · works with every agent</span>
+    </div>
+  </div>
+
+  <figure class="hero-demo">
+    <div class="demo-frame">
+      <div class="demo-chrome">
+        <span class="dot dot-r" aria-hidden="true"></span>
+        <span class="dot dot-y" aria-hidden="true"></span>
+        <span class="dot dot-g" aria-hidden="true"></span>
+        <span class="demo-title-bar">~/my-brain · nanobrain</span>
+      </div>
+      <img src="/demo.gif"
+           alt="nanobrain CLI demo: querying brain status, who, list, show, works with."
+           loading="eager" width="1200" height="675" />
+    </div>
+  </figure>
+</section>
+
+<section class="rule" aria-hidden="true"></section>
+
+<section class="problem">
+  <div class="container narrow">
+    <h2 class="section-h2">This isn't memory. It's a knowledge corpus.</h2>
+    <p class="section-lede">
+      Memory is "what did I say last Tuesday." Vendor memory features handle that fine.
+    </p>
+    <p class="prose">
+      The actual problem is your knowledge corpus lives half in your head, half in scattered notes,
+      half in a thousand AI sessions you can't get back. Your voice. Your taste. The decisions
+      you've made and the <em>why</em> behind them. Your relationships and how you talk to each one.
+      Every AI agent you start fresh has to be brought up to speed.
+    </p>
+    <p class="prose">
+      <strong>nanobrain captures that corpus while you work, distills it in your voice, and lets
+      every agent read it.</strong> The brain builds itself. You don't have to remember to remember.
+    </p>
+  </div>
+</section>
+
+<section id="how" class="how">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">how it works</span>
+      <h2 class="section-h2">Three layers. Always-on capture. Idle-time distill.</h2>
+    </div>
+
+    <div class="layers">
+      <article class="layer">
+        <div class="layer-num">01</div>
+        <h3>Capture</h3>
+        <p>
+          Every Claude Code session fires a hook. The hook does <strong>one thing</strong>: append a
+          50-millisecond pointer to a queue. No LLM, no commit, no waiting.
+          You never feel it.
+        </p>
+      </article>
+      <article class="layer">
+        <div class="layer-num">02</div>
+        <h3>Distill</h3>
+        <p>
+          A background drainer wakes every 30 minutes. It checks if you're idle. If you're typing,
+          it skips. If you've been quiet for 5+ minutes, it pulls one session from the queue and
+          distills it into your brain — in your voice.
+        </p>
+      </article>
+      <article class="layer">
+        <div class="layer-num">03</div>
+        <h3>Query</h3>
+        <p>
+          <code>/brain who is jane</code>. <code>/brain links ledger</code>. Or wire any agent
+          (Claude, Cursor, Codex, Gemini, Aider) through MCP — they all read the same markdown,
+          context-filtered.
+        </p>
+      </article>
+    </div>
+
+    <div class="flow">
+<pre>Claude session →   <span class="flow-arrow">┌────────────────────────────────────────────┐</span>
+  Gmail thread →   <span class="flow-arrow">│  hook: 50ms pointer → queue/*.pending     │</span>
+  Calendar     →   <span class="flow-arrow">│  drainer (idle): distill → brain/*.md     │</span>
+  Slack        →   <span class="flow-arrow">│  graph: [[wikilinks]] auto-indexed        │</span>
+                   <span class="flow-arrow">└────────────────────────────────────────────┘</span>
+                                       │
+                                       ▼
+                       <span class="flow-cmd">/brain who is jane</span>
+                       <span class="flow-cmd">/brain links project-x</span>
+                       <span class="flow-cmd">/brain spawn branding-agent</span></pre>
+    </div>
+  </div>
+</section>
+
+<section class="contrast">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">why it's different</span>
+      <h2 class="section-h2">Every other "memory" tool locks you in. This one outlives them.</h2>
+    </div>
+
+    <div class="contrast-table-wrap">
+      <table class="contrast-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th><strong>nanobrain</strong></th>
+            <th>Claude Memory</th>
+            <th>ChatGPT Memory</th>
+            <th>Mem0 / Letta</th>
+            <th>Notion AI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Plain markdown</td><td class="yes">●</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td>Works without internet</td><td class="yes">●</td><td>—</td><td>—</td><td class="meh">○</td><td>—</td></tr>
+          <tr><td>You own the data</td><td class="yes">●</td><td>—</td><td>—</td><td class="meh">○</td><td>—</td></tr>
+          <tr><td>Readable in 50 years</td><td class="yes">●</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td>Multi-agent (Claude / Cursor / Codex / Gemini)</td><td class="yes">●</td><td>—</td><td>—</td><td class="meh">○</td><td>—</td></tr>
+          <tr><td>Greppable from your terminal</td><td class="yes">●</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td>Open source</td><td class="yes">● MIT</td><td>—</td><td>—</td><td>mixed</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="commands" class="commands">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">17 commands</span>
+      <h2 class="section-h2">Five you'll use daily. Twelve more when you need them.</h2>
+    </div>
+
+    <div class="cmd-grid">
+      <article class="cmd-card cmd-primary">
+        <code>/brain</code>
+        <p>Query the brain. Who is X. What's connected to Y. Where does Z live.</p>
+      </article>
+      <article class="cmd-card cmd-primary">
+        <code>/brain-save</code>
+        <p>Force-save a decision or learning mid-session. Routes to the right file, redacts secrets, commits.</p>
+      </article>
+      <article class="cmd-card cmd-primary">
+        <code>/brain-spawn</code>
+        <p>Mint a specialized agent with declared scope. Branding agent on the work side. Investing agent on the personal side. Each one boundary-locked.</p>
+      </article>
+      <article class="cmd-card cmd-primary">
+        <code>/brain-doctor</code>
+        <p>Health check. Sources, contexts, GitHub sync, queue state, failed entries with retry hints.</p>
+      </article>
+      <article class="cmd-card cmd-primary">
+        <code>/brain-restore</code>
+        <p>Non-destructive time travel. Branches from any git tag. Never resets, never force-pushes, never destroys current work.</p>
+      </article>
+    </div>
+
+    <details class="cmd-more">
+      <summary>And twelve more — ingest, distill, init, index, log, lint, graph, hash, compact, evolve, checkpoint, redact</summary>
+      <div class="cmd-more-list">
+        <p><code>/brain-ingest</code> · pull one source into INBOX</p>
+        <p><code>/brain-distill</code> · distill INBOX entries into brain files</p>
+        <p><code>/brain-init</code> · scaffold a new brain</p>
+        <p><code>/brain-index</code> · rebuild the entity catalog</p>
+        <p><code>/brain-log</code> · append one operation line, greppable</p>
+        <p><code>/brain-lint</code> · catch orphan pages, broken refs, missing tags</p>
+        <p><code>/brain-graph</code> · rebuild [[wikilink]] backlink index</p>
+        <p><code>/brain-hash</code> · integrity check via BRAIN_HASH.txt</p>
+        <p><code>/brain-compact</code> · weekly cleanup, archives stale entries</p>
+        <p><code>/brain-evolve</code> · monthly self-improvement proposal</p>
+        <p><code>/brain-checkpoint</code> · force-capture mid-session</p>
+        <p><code>/brain-redact</code> · scrub a leaked secret from history</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section id="install" class="install">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">bootstrap</span>
+      <h2 class="section-h2">Two minutes to install. The brain takes it from there.</h2>
+    </div>
+
+    <div class="install-steps">
+      <div class="install-step">
+        <div class="install-num">01</div>
+        <pre><code><span class="cmt"># Clone the framework</span>
+git clone https://github.com/siddsdixit/nanobrain ~/nanobrain</code></pre>
+      </div>
+
+      <div class="install-step">
+        <div class="install-num">02</div>
+        <pre><code><span class="cmt"># Create a PRIVATE repo for YOUR brain content</span>
+gh repo create my-brain --private --clone</code></pre>
+      </div>
+
+      <div class="install-step">
+        <div class="install-num">03</div>
+        <pre><code><span class="cmt"># Install (capture hooks + idle distill drainer + skills)</span>
+bash ~/nanobrain/install.sh ~/my-brain \
+  --work you@company.com \
+  --personal you@gmail.com \
+  --gh-repo my-brain</code></pre>
+      </div>
+
+      <div class="install-step">
+        <div class="install-num">04</div>
+        <pre><code><span class="cmt"># Use Claude Code normally. Step away at some point.</span>
+<span class="cmt"># A few minutes after you go idle:</span>
+cat ~/my-brain/brain/decisions.md</code></pre>
+      </div>
+    </div>
+
+    <p class="install-note">
+      Capture wires into Claude Code's <code>Stop</code>, <code>SessionEnd</code>, and
+      <code>PreCompact</code> hooks — each is a sub-50ms file append, invisible to you.
+      The distill drainer runs every 30 min via <code>launchd</code>, but only does LLM work
+      when your keyboard's been idle for 5+ minutes. The brain builds itself in the background.
+      You never wait on it.
+    </p>
+  </div>
+</section>
+
+<section class="works-with">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">works with</span>
+      <h2 class="section-h2">Read from any agent. Capture from Claude today, the rest in v2.2.</h2>
+    </div>
+    <div class="tools-grid">
+      <article class="tool"><h3>Claude Code</h3><p>Native capture via Stop hook.<br/>Read via MCP.</p><span class="tool-badge tool-badge-ok">read · capture</span></article>
+      <article class="tool"><h3>Codex CLI</h3><p>Read via MCP today.<br/>Capture wrapper in v2.2.</p><span class="tool-badge">read</span></article>
+      <article class="tool"><h3>Cursor</h3><p>Read via MCP today.<br/>Capture wrapper in v2.2.</p><span class="tool-badge">read</span></article>
+      <article class="tool"><h3>Gemini CLI</h3><p>Read via MCP today.<br/>Capture wrapper in v2.2.</p><span class="tool-badge">read</span></article>
+      <article class="tool"><h3>Aider</h3><p>Read via MCP today.<br/>Capture wrapper in v2.2.</p><span class="tool-badge">read</span></article>
+    </div>
+  </div>
+</section>
+
+<section id="lineage" class="lineage">
+  <div class="container narrow">
+    <div class="section-head centered">
+      <span class="kicker">lineage</span>
+      <h2 class="section-h2">Built on Karpathy's LLM Wiki pattern.</h2>
+    </div>
+    <p class="prose">
+      In <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">April 2026,
+      Andrej Karpathy described the pattern</a>: three-layer corpus (raw / wiki / schema),
+      immutable raw firehose, LLM-owned wiki, schema co-evolution via ADRs, git-native, source-dated
+      entries.
+    </p>
+    <p class="prose">
+      What Karpathy described as a personal practice, <strong>nanobrain ships as a framework</strong>:
+      same structure, same discipline, plus the capture loop, lint, index, log, and graph machinery
+      that keep the corpus honest at scale.
+    </p>
+    <ul class="lineage-list">
+      <li><strong>Karpathy's <code>autoresearch</code></strong> · git history as agent memory</li>
+      <li><strong>Vannevar Bush's memex</strong> (1945) · the original associative trail</li>
+      <li><strong>Obsidian, Logseq, Roam</strong> · wikilinks as a primitive</li>
+    </ul>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="container narrow centered">
+    <h2 class="cta-title">Stop teaching every agent who you are.</h2>
+    <p class="cta-lede">Capture once. Read everywhere. Forever.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary btn-lg" href="#install">Install →</a>
+      <a class="btn btn-ghost btn-lg" href="https://github.com/siddsdixit/nanobrain">★ Star on GitHub</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="container foot-inner">
+    <div class="foot-col">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="22" height="22"><rect x="6" y="6" width="8" height="8" rx="1.5" fill="currentColor"/><rect x="18" y="6" width="8" height="8" rx="1.5" fill="currentColor"/><rect x="6" y="18" width="20" height="8" rx="1.5" fill="currentColor"/></svg>
+        </span>
+        <span class="brand-name">nanobrain</span>
+      </div>
+      <p class="foot-tag">The second brain that thinks like you.<br/>Markdown · git · forever.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Project</h4>
+      <a href="https://github.com/siddsdixit/nanobrain">GitHub</a>
+      <a href="https://github.com/siddsdixit/nanobrain/blob/main/README.md">README</a>
+      <a href="https://github.com/siddsdixit/nanobrain/blob/main/docs/ARCHITECTURE.md">Architecture</a>
+      <a href="https://github.com/siddsdixit/nanobrain/blob/main/docs/COMPATIBILITY.md">Compatibility</a>
+    </div>
+    <div class="foot-col">
+      <h4>Docs</h4>
+      <a href="https://github.com/siddsdixit/nanobrain/blob/main/docs/PRD.md">PRD</a>
+      <a href="https://github.com/siddsdixit/nanobrain/blob/main/docs/SPEC.md">Spec</a>
+      <a href="https://github.com/siddsdixit/nanobrain/tree/main/docs/sprints">Sprints</a>
+      <a href="https://github.com/siddsdixit/nanobrain/tree/main/docs/adr">ADRs</a>
+    </div>
+    <div class="foot-col">
+      <h4>Built by</h4>
+      <a href="https://github.com/siddsdixit">Sid Dixit</a>
+      <a href="https://github.com/siddsdixit/nanobrain/issues">Issues</a>
+      <a href="https://github.com/siddsdixit/nanobrain/blob/main/LICENSE">MIT License</a>
+    </div>
+  </div>
+  <div class="container foot-bottom">
+    © 2026 Sid Dixit · Built on Karpathy's LLM Wiki pattern
+  </div>
+</footer>
+
+</body>
+</html>
