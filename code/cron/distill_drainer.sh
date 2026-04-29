@@ -108,17 +108,19 @@ process_one() {
       timeout "$DISTILL_TIMEOUT" bash -c "BRAIN_DIR='$BRAIN_DIR' NANOBRAIN_DIR='$FRAMEWORK_DIR' bash '$distill_sh' claude" \
         >>"$logs_dir/drainer.log" 2>&1 || rc=$?
     else
-      # Bash-only timeout fallback. Run distill in background, watchdog kills it.
-      ( BRAIN_DIR="$BRAIN_DIR" NANOBRAIN_DIR="$FRAMEWORK_DIR" \
-          bash "$distill_sh" claude >>"$logs_dir/drainer.log" 2>&1 ) &
+      # Bash + perl fallback. perl setpgrp + exec puts distill in its own
+      # process group so we can kill the whole tree (children + grandchildren).
+      perl -e 'use POSIX; setpgrp(0,0); exec @ARGV' \
+        bash -c "BRAIN_DIR='$BRAIN_DIR' NANOBRAIN_DIR='$FRAMEWORK_DIR' bash '$distill_sh' claude" \
+        >>"$logs_dir/drainer.log" 2>&1 &
       local pid=$!
       local waited=0
       while kill -0 "$pid" 2>/dev/null; do
         if [ "$waited" -ge "$DISTILL_TIMEOUT" ]; then
-          # Kill the process group (claude -p may have spawned children).
-          kill -TERM "-$pid" 2>/dev/null || kill -TERM "$pid" 2>/dev/null
+          # Kill entire process group (negative pid). Reaches grandchildren.
+          kill -TERM -- "-$pid" 2>/dev/null || kill -TERM "$pid" 2>/dev/null
           sleep 1
-          kill -KILL "-$pid" 2>/dev/null || kill -KILL "$pid" 2>/dev/null
+          kill -KILL -- "-$pid" 2>/dev/null || kill -KILL "$pid" 2>/dev/null
           rc=124
           break
         fi
