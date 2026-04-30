@@ -129,7 +129,7 @@ export const HeroScene = () => {
           marginTop: 4,
         }}
       >
-        <BrandGlyph size={72} />
+        <BrandGlyph size={108} />
         <div
           style={{
             fontFamily:
