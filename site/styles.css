@@ -227,10 +227,10 @@ strong { color: var(--ink); font-weight: 600; }
   user-select: none;
 }
 .hero-brand-glyph {
-  width: clamp(64px, 8.5vw, 104px);
-  height: clamp(64px, 8.5vw, 104px);
+  width: clamp(48px, 6.5vw, 80px);
+  height: clamp(48px, 6.5vw, 80px);
   flex-shrink: 0;
-  filter: drop-shadow(0 0 28px rgba(224,130,99,0.32));
+  filter: drop-shadow(0 0 24px rgba(224,130,99,0.32));
   transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .hero-brand:hover .hero-brand-glyph {
@@ -271,7 +271,7 @@ strong { color: var(--ink); font-weight: 600; }
 
 @media (max-width: 640px) {
   .hero-brand { gap: 14px; }
-  .hero-brand-glyph { width: 56px; height: 56px; }
+  .hero-brand-glyph { width: 42px; height: 42px; }
   .hero-brand-text { font-size: 56px; }
   .hero-title { font-size: 26px; }
 }

@@ -144,7 +144,7 @@ export const UniversalScene = () => {
             filter: `drop-shadow(0 0 50px rgba(224,130,99,${0.4 * brainOpacity}))`,
           }}
         >
-          <Glyph size={140} />
+          <Glyph size={72} />
           <div
             style={{
               fontFamily: "-apple-system, Inter, system-ui, sans-serif",

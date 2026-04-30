@@ -136,7 +136,7 @@ export const ForeverScene = () => {
           marginTop: -40,
         }}
       >
-        <Glyph size={84} />
+        <Glyph size={64} />
         <div
           style={{
             fontFamily:
