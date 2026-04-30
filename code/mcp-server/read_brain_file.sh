@@ -23,11 +23,25 @@ done
 BRAIN_DIR="${BRAIN_DIR:-$HOME/brain}"
 
 case "$FILE" in
+  ""|/*|../*|*/../*|*/..|..|*//*)
+    echo "[read_brain_file] invalid brain-relative path: $FILE" >&2
+    exit 1
+    ;;
+  brain/*.md) ;;
+  *)
+    echo "[read_brain_file] refused non-brain file: $FILE" >&2
+    exit 1
+    ;;
+esac
+
+case "$FILE" in
   *raw.md|*interactions.md|*INBOX.md|*/INBOX.md)
     echo "[read_brain_file] refused firehose: $FILE" >&2
     exit 1
     ;;
 esac
+
+command -v yq >/dev/null 2>&1 || { echo "[read_brain_file] yq required for agent scope parsing" >&2; exit 1; }
 
 # Parse YAML frontmatter (between leading --- and next ---).
 fm=$(awk '
@@ -37,19 +51,24 @@ fm=$(awk '
   in_fm {print}
 ' "$AGENT")
 
-ctx_filter=$(printf '%s\n' "$fm" | yq -o=tsv '.reads.filter.context_in // [] | .[]' 2>/dev/null | tr '\n' ' ')
-allowed_files=$(printf '%s\n' "$fm" | yq -o=tsv '.reads.files // [] | .[]' 2>/dev/null | tr '\n' ' ')
+[ -n "$fm" ] || { echo "[read_brain_file] agent frontmatter required" >&2; exit 1; }
+
+ctx_filter_raw=$(printf '%s\n' "$fm" | yq -o=tsv '.reads.filter.context_in // [] | .[]' 2>/dev/null) \
+  || { echo "[read_brain_file] failed to parse reads.filter.context_in" >&2; exit 1; }
+allowed_files_raw=$(printf '%s\n' "$fm" | yq -o=tsv '.reads.files // [] | .[]' 2>/dev/null) \
+  || { echo "[read_brain_file] failed to parse reads.files" >&2; exit 1; }
+ctx_filter=$(printf '%s\n' "$ctx_filter_raw" | tr '\n' ' ')
+allowed_files=$(printf '%s\n' "$allowed_files_raw" | tr '\n' ' ')
 
 # Whitelist check before file existence (so unauthorized targets get a consistent error).
-if [ -n "$(echo "$allowed_files" | tr -d ' ')" ]; then
-  ok=0
-  for f in $allowed_files; do
-    [ "$f" = "$FILE" ] && ok=1 && break
-  done
-  if [ "$ok" -eq 0 ]; then
-    echo "[read_brain_file] $FILE not in agent's reads.files" >&2
-    exit 1
-  fi
+[ -n "$(echo "$allowed_files" | tr -d ' ')" ] || { echo "[read_brain_file] agent reads.files required" >&2; exit 1; }
+ok=0
+for f in $allowed_files; do
+  [ "$f" = "$FILE" ] && ok=1 && break
+done
+if [ "$ok" -eq 0 ]; then
+  echo "[read_brain_file] $FILE not in agent's reads.files" >&2
+  exit 1
 fi
 
 target="$BRAIN_DIR/$FILE"
@@ -61,11 +80,16 @@ if [ -z "$(echo "$ctx_filter" | tr -d ' ')" ]; then
   exit 0
 fi
 
-# Filter entries by their {context: ...} marker. We treat blank lines as separators.
+# Filter entries by their {context: ...} marker. Entries are split by markdown
+# headings, preserving blank lines inside each entry body.
 # Each block is included if it contains a `{context: X}` where X is in $ctx_filter.
 awk -v ctxs="$ctx_filter" '
   function include_block() {
     for (i = 1; i <= cnt; i++) print buf[i]
+  }
+  function flush_block() {
+    if (cnt > 0 && keep) include_block()
+    cnt = 0; keep = 0
   }
   BEGIN {
     cnt = 0
@@ -73,11 +97,8 @@ awk -v ctxs="$ctx_filter" '
     for (i = 1; i <= n; i++) if (arr[i] != "") allowed[arr[i]] = 1
     keep = 0
   }
-  /^[[:space:]]*$/ {
-    if (cnt > 0 && keep) include_block()
-    if (cnt > 0) print ""
-    cnt = 0; keep = 0
-    next
+  /^#{1,6}[[:space:]]/ {
+    flush_block()
   }
   {
     cnt++; buf[cnt] = $0

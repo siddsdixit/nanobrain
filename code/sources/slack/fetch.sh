@@ -34,7 +34,7 @@ command -v claude >/dev/null 2>&1 || { echo "[slack/fetch] claude CLI not in PAT
 
 prompt="Use the Slack MCP (mcp__claude_ai_Slack__slack_search_public_and_private) to fetch messages from the last $SINCE days. For each message, output a JSON array with fields: id, workspace_id, channel, user, ts (ISO8601), text. Output ONLY the JSON array, no other text, no markdown fence, no prose. If there are no results, output []."
 
-raw=$(printf '%s' "$prompt" | claude -p --output-format json 2>/dev/null || \
+raw=$(printf '%s' "$prompt" | claude -p 2>/dev/null || \
       printf '%s' "$prompt" | claude -p 2>/dev/null || true)
 
 json=$(printf '%s' "$raw" | awk '

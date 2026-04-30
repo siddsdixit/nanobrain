@@ -39,45 +39,39 @@ if [ "$src" = "granola" ]; then
   exit 1
 fi
 
-# Map source -> mcp server name (claude.ai remote naming).
+# Map source -> (mcp server key, human-readable grep term, tool prefix).
 case "$src" in
-  gmail)  mcp="claude_ai_Gmail" ;;
-  gcal)   mcp="claude_ai_Google_Calendar" ;;
-  gdrive) mcp="claude_ai_Google_Drive" ;;
-  slack)  mcp="claude_ai_Slack" ;;
+  gmail)  mcp="claude_ai_Gmail";            human="Gmail";          tool_prefix="mcp__claude_ai_Gmail" ;;
+  gcal)   mcp="claude_ai_Google_Calendar";  human="Google Calendar"; tool_prefix="mcp__claude_ai_Google_Calendar" ;;
+  gdrive) mcp="claude_ai_Google_Drive";     human="Google Drive";   tool_prefix="mcp__claude_ai_Google_Drive" ;;
+  slack)  mcp="claude_ai_Slack";            human="Slack";          tool_prefix="mcp__claude_ai_Slack" ;;
   *) echo "[detect_mcp] unknown source: $src" >&2; exit 64 ;;
 esac
 
 settings="$HOME/.claude/settings.json"
 
-# (2) + (3): scan settings.json.
+# (2) + (3): scan settings.json (covers locally-registered MCPs).
 if [ -f "$settings" ]; then
   if command -v jq >/dev/null 2>&1; then
     if jq -e --arg k "$mcp" '.mcpServers[$k]? // empty' "$settings" >/dev/null 2>&1; then
-      dbg "$mcp found in mcpServers"
-      exit 0
+      dbg "$mcp found in mcpServers"; exit 0
     fi
   fi
   if grep -Fq "mcp__${mcp}" "$settings" 2>/dev/null; then
-    dbg "$mcp found via mcp__ tool pattern"
-    exit 0
-  fi
-  if grep -Fq "\"$mcp\"" "$settings" 2>/dev/null; then
-    dbg "$mcp found as bare key in settings"
-    exit 0
+    dbg "$mcp found via mcp__ pattern in settings"; exit 0
   fi
 fi
 
-# (4) Probe claude CLI. claude.ai remote MCPs auto-attach when logged in.
+# (4) Probe claude CLI. claude.ai remote MCPs auto-attach and show up in
+#     the tool listing even though they're not in settings.json.
 if command -v claude >/dev/null 2>&1; then
-  probe=$(echo "" | claude -p "list available MCP tools as JSON array of names" 2>/dev/null || true)
-  if printf '%s' "$probe" | grep -Fq "claude_ai_${mcp#claude_ai_}"; then
-    dbg "$mcp visible to claude CLI"
-    exit 0
+  probe=$(echo "list available MCP tools briefly" | claude -p 2>/dev/null || true)
+  # Match either the tool prefix (mcp__claude_ai_Gmail) or human name (Gmail).
+  if printf '%s' "$probe" | grep -Fq "$tool_prefix"; then
+    dbg "$mcp visible via tool prefix in probe"; exit 0
   fi
-  if printf '%s' "$probe" | grep -Fq "$mcp"; then
-    dbg "$mcp visible to claude CLI"
-    exit 0
+  if printf '%s' "$probe" | grep -iq "$human"; then
+    dbg "$mcp visible via human name in probe"; exit 0
   fi
 fi
 

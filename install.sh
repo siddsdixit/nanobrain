@@ -159,6 +159,26 @@ JSON
   fi
 fi
 
+# 4b. Register brain skills with Claude Code (idempotent symlinks).
+# Without this, /brain, /brain-save, etc. are invisible to Claude Code.
+SKILLS_SRC="$BRAIN_DIR/.nanobrain/code/skills"
+SKILLS_DST="$HOME/.claude/skills"
+if [ -d "$SKILLS_SRC" ]; then
+  mkdir -p "$SKILLS_DST"
+  registered=0
+  for s in "$SKILLS_SRC"/*/; do
+    [ -d "$s" ] || continue
+    name=$(basename "$s")
+    target="$SKILLS_DST/$name"
+    # Replace stale symlinks; skip real dirs/files we don't own.
+    if [ -L "$target" ] || [ ! -e "$target" ]; then
+      ln -sfn "$s" "$target"
+      registered=$((registered + 1))
+    fi
+  done
+  echo "[install] registered $registered brain skills in $SKILLS_DST"
+fi
+
 # 5. git init + initial commit.
 if [ ! -d "$BRAIN_DIR/.git" ]; then
   ( cd "$BRAIN_DIR" && git init -q ) || true
