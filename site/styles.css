@@ -260,6 +260,27 @@ strong { color: var(--ink); font-weight: 600; }
 }
 .btn-lg { padding: 14px 26px; font-size: 16px; }
 
+.hero-install {
+  margin: 22px 0 18px;
+  padding: 14px 18px;
+  background: rgba(240,224,208,0.06);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-dim);
+  overflow-x: auto;
+  white-space: pre;
+}
+.hero-install .prompt {
+  color: var(--accent, #E08263);
+  user-select: none;
+  margin-right: 10px;
+  opacity: 0.8;
+}
+.hero-install code { color: inherit; background: none; padding: 0; }
+
 .hero-meta {
   font-size: 14px;
   color: var(--ink-mute);

@@ -1,0 +1,23 @@
+name: Feature request
+description: New source, new skill, new behavior.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed shape (sketch the interface)
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: I read the README roadmap and this is not already on it.
+          required: true
+        - label: This stays markdown + bash + git native (no new runtime dependencies).
+          required: true

@@ -1,0 +1,43 @@
+name: Bug report
+description: Something is broken in nanobrain.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      placeholder: e.g. Stop hook fired but nothing landed in brain/decisions.md.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Repro steps
+      placeholder: |
+        1. bash install.sh ~/test-brain
+        2. claude code session, decide something
+        3. cat ~/test-brain/brain/decisions.md
+  - type: input
+    id: version
+    attributes:
+      label: nanobrain version (git rev or tag)
+      placeholder: "v2.2.0"
+  - type: dropdown
+    id: os
+    attributes:
+      label: OS
+      options:
+        - macOS
+        - Linux
+        - WSL
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of /brain-doctor
+      render: shell

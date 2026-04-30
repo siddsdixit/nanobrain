@@ -2,9 +2,9 @@
 
 # `nanobrain`
 
-### the second brain that travels with you across every AI
+### the second brain that thinks like you
 
-**Markdown. Git. Vendor-neutral. Forever.**
+**Markdown. Git. Read by every AI agent. Yours forever.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![CI](https://img.shields.io/github/actions/workflow/status/siddsdixit/nanobrain/ci.yml?branch=main&label=tests)](https://github.com/siddsdixit/nanobrain/actions)
@@ -257,6 +257,21 @@ Two repos. The public framework never sees your content. Your private brain is y
 
 **What if I want to leave?**
 `cat brain/self.md`. That is your exit strategy. No migrations, no exports, no vendor permission required.
+
+**How is this different from MemGPT / Letta / Mem0?**
+Those are runtime memory systems. They decide what to remember, when to fetch it, and how to compress it, all at inference time. `nanobrain` is the corpus *underneath* a memory system. It captures durable artifacts (decisions, people, learnings) into plain markdown your tools can grep. You can run MemGPT or Mem0 on top of nanobrain. Pattern: nanobrain owns truth; runtime memory owns relevance.
+
+**Why bash? Isn't this 2026?**
+Three reasons. (1) Bash 3.2 is the only language guaranteed to be on every Mac and Linux box for the next 30 years. Python versions break; bash 3.2 doesn't. (2) The hook lives in your terminal's critical path on every Claude turn. A 50ms file append in bash is hard to write in Python without a startup penalty. (3) Every skill is a file you can read and modify. No build step, no venv, no `pip install`. On a fresh machine, you can read the entire framework in an afternoon.
+
+**What happens to my brain if Claude Code goes away?**
+Nothing. The brain is markdown in *your* git repo. The capture hook is one bash script. Read the brain with any agent that supports MCP (Cursor, Codex, Gemini, Aider — all listed under "works with"). If MCP dies too, `cat brain/self.md` still works in 50 years.
+
+**Isn't this just Karpathy's gist plus a shell wrapper?**
+Karpathy described the *pattern* (three-layer corpus, immutable raw, LLM-owned wiki). `nanobrain` ships the *machinery*: capture loop, idle drainer, secret redaction, operation log, integrity hash, lint, index, graph, agent foundry, MCP read surface, multi-tool activation files. Karpathy's gist is the north star. This is the freight train.
+
+**What about sensitive data — medical, legal, NDA-bound?**
+Two answers. (1) Capture is local-first. The hook writes to disk; the drainer calls `claude -p`, which goes to Anthropic. Use `--skip-hook` and `--skip-cron` for fully air-gapped capture; you lose distill but keep the firehose. (2) `code/lib/redact.sh` strips token-shaped secrets before any LLM sees them. For HIPAA/GDPR-class data you should not point this at sensitive sources at all — `_contexts.yaml` lets you scope which sources are ingested.
 
 **Does it work on Linux?**
 The bash core works on Linux 3.2+. The launchd cron plists are macOS-only -- on Linux, add equivalent cron entries manually. See `code/cron/`.

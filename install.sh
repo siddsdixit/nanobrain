@@ -46,6 +46,27 @@ done
 
 FRAMEWORK_DIR="$(cd "$(dirname "$0")" && pwd)"
 
+# 0. Preflight: verify dependencies before doing anything destructive.
+missing=""
+for c in git bash; do
+  command -v "$c" >/dev/null 2>&1 || missing="$missing $c"
+done
+if [ -n "$missing" ]; then
+  echo "[install] ERROR: missing required commands:$missing" >&2
+  echo "[install]   On macOS:  brew install$missing" >&2
+  echo "[install]   On Debian: sudo apt-get install -y$missing" >&2
+  exit 1
+fi
+
+# Soft deps: warn loudly, list what breaks without each.
+warn_missing() {
+  printf "[install] WARN: '%s' not found — %s\n" "$1" "$2" >&2
+}
+command -v jq     >/dev/null 2>&1 || warn_missing jq     "Stop hook will NOT auto-wire; you'll need to edit ~/.claude/settings.json by hand."
+command -v gh     >/dev/null 2>&1 || warn_missing gh     "GitHub repo creation/push disabled. Use --skip-gh or install gh first."
+command -v claude >/dev/null 2>&1 || warn_missing claude "Claude Code CLI not on PATH. Distill will fail until you install from https://claude.com/claude-code."
+command -v rsync  >/dev/null 2>&1 || warn_missing rsync  "Falling back to cp -R (slower; OK for first install)."
+
 # 1. Copy framework. .nanobrain inside the brain dir keeps everything together.
 mkdir -p "$BRAIN_DIR/.nanobrain" "$BRAIN_DIR/brain" "$BRAIN_DIR/data"
 if command -v rsync >/dev/null 2>&1; then
@@ -85,18 +106,23 @@ else
     elif [ "$source" = "granola" ]; then
       echo
       echo "[install] Granola not configured."
-      printf "  Do you have a Granola API key? (y/N): "
-      read -r ans
-      case "$ans" in
-        [yY]*)
-          BRAIN_DIR="$BRAIN_DIR" NANOBRAIN_DIR="$BRAIN_DIR/.nanobrain" \
-            bash "$BRAIN_DIR/.nanobrain/code/skills/brain-add/add.sh" granola || true
-          ;;
-        *)
-          echo "  Skipping. Run '/brain-add granola' anytime after getting a key."
-          echo "  (Settings → API in the Granola desktop app)"
-          ;;
-      esac
+      if [ -t 0 ]; then
+        printf "  Do you have a Granola API key? (y/N): "
+        read -r ans
+        case "$ans" in
+          [yY]*)
+            BRAIN_DIR="$BRAIN_DIR" NANOBRAIN_DIR="$BRAIN_DIR/.nanobrain" \
+              bash "$BRAIN_DIR/.nanobrain/code/skills/brain-add/add.sh" granola || true
+            ;;
+          *)
+            echo "  Skipping. Run '/brain-add granola' anytime after getting a key."
+            echo "  (Settings → API in the Granola desktop app)"
+            ;;
+        esac
+      else
+        echo "  Skipped (non-interactive shell). Run '/brain-add granola' later."
+        echo "  (Settings → API in the Granola desktop app)"
+      fi
     else
       echo "[install] $source: MCP not connected. Run '/brain-add $source' after connecting claude.ai → Integrations."
     fi

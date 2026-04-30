@@ -7,6 +7,16 @@ on:
     branches: [main]
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: tests
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install deps
+        run: sudo apt-get update && sudo apt-get install -y bash jq
+      - name: Run full test suite
+        run: bash tests/run_all.sh
+
   redact:
     runs-on: ubuntu-latest
     name: secrets filter
@@ -37,6 +47,14 @@ password=correct-horse-battery-staple'
     name: shellcheck
     steps:
       - uses: actions/checkout@v4
-      - name: Lint shell scripts
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Lint shell scripts (severity=error)
         run: |
-          shellcheck --severity=error code/lib/*.sh code/hooks/*.sh code/cron/*.sh code/skills/*/*.sh code/sources/*/*.sh install.sh || true
+          shellcheck --severity=error \
+            code/lib/*.sh \
+            code/hooks/*.sh \
+            code/cron/*.sh \
+            code/skills/*/*.sh \
+            code/sources/*/*.sh \
+            install.sh
