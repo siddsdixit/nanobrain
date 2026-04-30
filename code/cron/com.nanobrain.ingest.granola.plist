@@ -7,8 +7,8 @@
   <key>ProgramArguments</key>
   <array>
     <string>/bin/bash</string>
-    <string>__BRAIN_DIR__/.nanobrain/code/skills/brain-ingest/dispatch.sh</string>
-    <string>granola</string>
+    <string>-c</string>
+    <string>[ -f __BRAIN_DIR__/.env ] &amp;&amp; . __BRAIN_DIR__/.env; exec bash __BRAIN_DIR__/.nanobrain/code/skills/brain-ingest/dispatch.sh granola</string>
   </array>
   <key>EnvironmentVariables</key>
   <dict>
