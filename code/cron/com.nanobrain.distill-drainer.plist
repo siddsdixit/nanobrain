@@ -13,6 +13,7 @@
   <dict>
     <key>BRAIN_DIR</key><string>__BRAIN_DIR__</string>
     <key>NANOBRAIN_DIR</key><string>__BRAIN_DIR__/.nanobrain</string>
+    <key>PATH</key><string>__HOME__/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
   </dict>
   <key>StartInterval</key><integer>1800</integer>
   <key>RunAtLoad</key><false/>

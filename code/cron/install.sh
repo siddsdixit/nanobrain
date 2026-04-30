@@ -41,7 +41,7 @@ for src in autosave distill-drainer ingest.gmail ingest.gcal ingest.gdrive inges
   if [ "$DRY" -eq 1 ]; then
     echo "DRY: render $in -> $out (BRAIN_DIR=$BRAIN_DIR)"
   else
-    sed "s|__BRAIN_DIR__|$BRAIN_DIR|g" "$in" > "$out"
+    sed "s|__BRAIN_DIR__|$BRAIN_DIR|g; s|__HOME__|$HOME|g" "$in" > "$out"
     echo "[cron install] rendered $out"
   fi
 
