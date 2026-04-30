@@ -7,11 +7,14 @@ const INK_DIM = "#9a8676";
 const INK_MUTE = "#7a6a5e";
 
 const SOURCES = [
-  { name: "claude", label: "Claude session", color: "#cc7b5e" },
-  { name: "gmail",  label: "Gmail thread",   color: "#d4574e" },
-  { name: "gcal",   label: "Calendar event", color: "#5e9bcc" },
-  { name: "gdrive", label: "Drive doc",      color: "#7ec77a" },
-  { name: "slack",  label: "Slack message",  color: "#8e6ec9" },
+  { name: "claude", label: "Claude Code",   color: "#cc7b5e" },
+  { name: "cursor", label: "Cursor",        color: "#e0a06c" },
+  { name: "codex",  label: "Codex CLI",     color: "#b88a5e" },
+  { name: "gemini", label: "Gemini CLI",    color: "#5e9bcc" },
+  { name: "gmail",  label: "Gmail",         color: "#d4574e" },
+  { name: "gcal",   label: "Calendar",      color: "#76b8e0" },
+  { name: "gdrive", label: "Drive",         color: "#7ec77a" },
+  { name: "slack",  label: "Slack",         color: "#8e6ec9" },
 ];
 
 /**
@@ -89,30 +92,30 @@ export const SourcesScene = () => {
         }}
       >
         {/* Sources column */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
           {SOURCES.map((s, i) => {
             const appear = spring({
-              frame: frame - 24 - i * 7,
+              frame: frame - 22 - i * 5,
               fps,
-              config: { damping: 14, stiffness: 130 },
+              config: { damping: 14, stiffness: 140 },
             });
             // Each source pulses to indicate "data flowing"
-            const pulse = Math.sin((frame - 60 - i * 8) / 10) * 0.5 + 0.5;
-            const pulseOpacity = frame > 60 + i * 8 ? 0.5 + pulse * 0.5 : 0;
+            const pulse = Math.sin((frame - 55 - i * 5) / 10) * 0.5 + 0.5;
+            const pulseOpacity = frame > 55 + i * 5 ? 0.5 + pulse * 0.5 : 0;
             return (
               <div
                 key={s.name}
                 style={{
                   fontFamily: "ui-monospace, JetBrains Mono, monospace",
-                  fontSize: 20,
+                  fontSize: 18,
                   color: INK,
                   background: "rgba(240,224,208,0.05)",
                   border: `1.5px solid ${s.color}66`,
-                  borderRadius: 10,
-                  padding: "14px 18px",
+                  borderRadius: 9,
+                  padding: "10px 16px",
                   display: "flex",
                   alignItems: "center",
-                  gap: 14,
+                  gap: 12,
                   transform: `scale(${appear}) translateX(${(1 - appear) * -30}px)`,
                   opacity: appear,
                   position: "relative",
@@ -120,8 +123,8 @@ export const SourcesScene = () => {
               >
                 <span
                   style={{
-                    width: 11,
-                    height: 11,
+                    width: 10,
+                    height: 10,
                     borderRadius: "50%",
                     background: s.color,
                     boxShadow: `0 0 ${pulseOpacity * 14}px ${s.color}`,
@@ -209,19 +212,19 @@ export const SourcesScene = () => {
               background: "rgba(240,224,208,0.06)",
               border: "1px solid rgba(240,224,208,0.18)",
               borderRadius: 12,
-              padding: "20px 22px",
-              fontSize: 18,
+              padding: "16px 20px",
+              fontSize: 16,
               color: INK,
-              lineHeight: 1.8,
+              lineHeight: 1.7,
             }}
           >
-            <div style={{ color: INK_DIM, fontSize: 14, marginBottom: 14, letterSpacing: 2, textTransform: "uppercase", fontWeight: 600 }}>
+            <div style={{ color: INK_DIM, fontSize: 13, marginBottom: 10, letterSpacing: 2, textTransform: "uppercase", fontWeight: 600 }}>
               INBOX.md
             </div>
             {SOURCES.map((s, i) => {
               const fadeIn = interpolate(
                 frame,
-                [70 + i * 12, 80 + i * 12],
+                [62 + i * 7, 72 + i * 7],
                 [0, 1],
                 { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
               );
@@ -231,8 +234,9 @@ export const SourcesScene = () => {
                   style={{
                     opacity: fadeIn,
                     color: INK,
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: 600,
+                    lineHeight: 1.6,
                   }}
                 >
                   <span style={{ color: s.color, marginRight: 10, fontWeight: 800 }}>+</span>
