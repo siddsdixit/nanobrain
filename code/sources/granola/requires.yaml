@@ -1,0 +1,14 @@
+source: granola
+auth: local_jwt
+auth_file: "~/Library/Application Support/Granola/supabase.json"
+windows:
+  work: 30
+  personal: 30
+fetch:
+  via: local_jwt | NANOBRAIN_GRANOLA_STUB
+schedule:
+  cron_minutes: 60
+notes: >
+  No API key required. Reads WorkOS JWT from Granola's local app state.
+  Granola must be installed and have been launched at least once.
+  Token is refreshed automatically by the running app.

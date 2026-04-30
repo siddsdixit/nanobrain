@@ -27,8 +27,9 @@ fetch_threads() {
     cat "$NANOBRAIN_GMAIL_STUB"
     return 0
   fi
-  echo "[gmail] no MCP bridge configured (set NANOBRAIN_GMAIL_STUB)" >&2
-  exit 3
+  local fetch_sh="$SRC_DIR/fetch.sh"
+  [ -f "$fetch_sh" ] || { echo "[gmail] fetch.sh missing" >&2; exit 3; }
+  bash "$fetch_sh"
 }
 
 already_in_inbox() {

@@ -21,8 +21,9 @@ fetch_docs() {
     cat "$NANOBRAIN_GDRIVE_STUB"
     return 0
   fi
-  echo "[gdrive] no MCP bridge configured" >&2
-  exit 3
+  local fetch_sh="$SRC_DIR/fetch.sh"
+  [ -f "$fetch_sh" ] || { echo "[gdrive] fetch.sh missing" >&2; exit 3; }
+  bash "$fetch_sh"
 }
 
 window_days_for() {

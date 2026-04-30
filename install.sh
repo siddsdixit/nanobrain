@@ -20,24 +20,26 @@
 set -eu
 
 BRAIN_DIR="${1:-}"
-[ -n "$BRAIN_DIR" ] || { echo "usage: install.sh <brain_dir> [--work EMAIL] [--personal EMAIL] [--skip-cron] [--skip-hook] [--gh-repo NAME] [--public|--private]" >&2; exit 64; }
+[ -n "$BRAIN_DIR" ] || { echo "usage: install.sh <brain_dir> [--work EMAIL] [--personal EMAIL] [--skip-cron] [--skip-hook] [--skip-sources] [--gh-repo NAME] [--public|--private]" >&2; exit 64; }
 shift
 
 WORK=""
 PERSONAL=""
 SKIP_CRON=0
 SKIP_HOOK=0
+SKIP_SOURCES=0
 GH_REPO=""
 GH_VIS="--private"
 while [ "$#" -gt 0 ]; do
   case "$1" in
-    --work)      WORK="$2"; shift 2 ;;
-    --personal)  PERSONAL="$2"; shift 2 ;;
-    --skip-cron) SKIP_CRON=1; shift ;;
-    --skip-hook) SKIP_HOOK=1; shift ;;
-    --gh-repo)   GH_REPO="$2"; shift 2 ;;
-    --public)    GH_VIS="--public"; shift ;;
-    --private)   GH_VIS="--private"; shift ;;
+    --work)         WORK="$2"; shift 2 ;;
+    --personal)     PERSONAL="$2"; shift 2 ;;
+    --skip-cron)    SKIP_CRON=1; shift ;;
+    --skip-hook)    SKIP_HOOK=1; shift ;;
+    --skip-sources) SKIP_SOURCES=1; shift ;;
+    --gh-repo)      GH_REPO="$2"; shift 2 ;;
+    --public)       GH_VIS="--public"; shift ;;
+    --private)      GH_VIS="--private"; shift ;;
     *) echo "[install] unknown arg: $1" >&2; exit 64 ;;
   esac
 done
@@ -63,6 +65,23 @@ init_args=""
 if [ ! -f "$BRAIN_DIR/brain/_contexts.yaml" ]; then
   # shellcheck disable=SC2086
   BRAIN_DIR="$BRAIN_DIR" bash "$FRAMEWORK_DIR/code/skills/brain-init/wizard.sh" --brain-dir "$BRAIN_DIR" $init_args
+fi
+
+# 2b. Detect configured MCPs and initialize sources (unless --skip-sources).
+if [ "$SKIP_SOURCES" -eq 1 ]; then
+  echo "[install] source detection skipped (--skip-sources)"
+else
+  echo
+  echo "[install] Checking for configured MCP sources..."
+  for source in gmail gcal gdrive slack granola; do
+    if bash "$FRAMEWORK_DIR/code/lib/detect_mcp.sh" "$source" 2>/dev/null; then
+      echo "[install] $source detected. Running brain-add $source..."
+      BRAIN_DIR="$BRAIN_DIR" NANOBRAIN_DIR="$BRAIN_DIR/.nanobrain" \
+        bash "$BRAIN_DIR/.nanobrain/code/skills/brain-add/add.sh" "$source" || true
+    else
+      echo "[install] $source: not configured. Run '/brain-add $source' after connecting it."
+    fi
+  done
 fi
 
 # 3. cron / autosave plists (load unless --skip-cron).

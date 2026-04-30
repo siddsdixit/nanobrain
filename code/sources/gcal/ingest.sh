@@ -9,6 +9,7 @@ set -eu
 BRAIN_DIR="${BRAIN_DIR:-$HOME/brain}"
 FRAMEWORK_DIR="${NANOBRAIN_DIR:-$(cd "$(dirname "$0")/../../.." && pwd)}"
 LIB_DIR="$FRAMEWORK_DIR/code/lib"
+SRC_DIR="$FRAMEWORK_DIR/code/sources/gcal"
 
 DATA_DIR="$BRAIN_DIR/data/gcal"
 INBOX="$DATA_DIR/INBOX.md"
@@ -20,8 +21,9 @@ fetch_events() {
     cat "$NANOBRAIN_GCAL_STUB"
     return 0
   fi
-  echo "[gcal] no MCP bridge configured" >&2
-  exit 3
+  local fetch_sh="$SRC_DIR/fetch.sh"
+  [ -f "$fetch_sh" ] || { echo "[gcal] fetch.sh missing" >&2; exit 3; }
+  bash "$fetch_sh"
 }
 
 window_days_for() {

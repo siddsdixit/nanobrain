@@ -10,6 +10,7 @@ set -eu
 BRAIN_DIR="${BRAIN_DIR:-$HOME/brain}"
 FRAMEWORK_DIR="${NANOBRAIN_DIR:-$(cd "$(dirname "$0")/../../.." && pwd)}"
 LIB_DIR="$FRAMEWORK_DIR/code/lib"
+SRC_DIR="$FRAMEWORK_DIR/code/sources/slack"
 
 DATA_DIR="$BRAIN_DIR/data/slack"
 INBOX="$DATA_DIR/INBOX.md"
@@ -21,8 +22,9 @@ fetch_msgs() {
     cat "$NANOBRAIN_SLACK_STUB"
     return 0
   fi
-  echo "[slack] no MCP bridge configured" >&2
-  exit 3
+  local fetch_sh="$SRC_DIR/fetch.sh"
+  [ -f "$fetch_sh" ] || { echo "[slack] fetch.sh missing" >&2; exit 3; }
+  bash "$fetch_sh"
 }
 
 WINDOW_DAYS=30
