@@ -152,10 +152,16 @@ strong { color: var(--ink); font-weight: 600; }
 /* ─────────── hero ─────────── */
 
 .hero {
-  padding: 96px 0 64px;
+  padding: 56px 0 64px;
   text-align: center;
   position: relative;
   overflow: hidden;
+}
+.hero > .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
 }
 .hero::before {
   content: "";
@@ -166,7 +172,6 @@ strong { color: var(--ink); font-weight: 600; }
     radial-gradient(circle at 80% 30%, rgba(224,130,99,0.05), transparent 40%);
   pointer-events: none;
 }
-.hero > .container { position: relative; }
 
 .hero-eyebrow {
   display: inline-flex;
@@ -195,18 +200,80 @@ strong { color: var(--ink); font-weight: 600; }
   100% { box-shadow: 0 0 0 0 rgba(224,130,99,0); }
 }
 
-.hero-title {
-  font-size: clamp(44px, 7vw, 84px);
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 1.02;
-  margin: 0 0 28px;
+/* Hero tag — small, subtle. Brand is the hero, not the version label. */
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-mute);
+  background: rgba(240,224,208,0.04);
+  border: 1px solid var(--rule-soft);
+  padding: 4px 11px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+/* Brand wordmark — THE hero. Bigger than the tagline. */
+.hero-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 22px;
+  margin: 0 0 24px;
+  user-select: none;
+}
+.hero-brand-glyph {
+  width: clamp(64px, 8.5vw, 104px);
+  height: clamp(64px, 8.5vw, 104px);
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 28px rgba(224,130,99,0.32));
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.hero-brand:hover .hero-brand-glyph {
+  transform: rotate(-4deg) scale(1.04);
+}
+.hero-brand-text {
+  font-size: clamp(64px, 9.5vw, 116px);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  margin: 0;
   color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+}
+.hero-brand-accent {
+  color: var(--coral);
+  font-weight: 800;
+  background: linear-gradient(180deg, var(--coral) 0%, #C66A4E 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Tagline — now a subhead, not the headline. */
+.hero-title {
+  font-size: clamp(28px, 4.4vw, 52px);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  margin: 0 0 26px;
+  color: var(--ink-dim);
 }
 .hero-title em {
   font-style: italic;
-  color: var(--coral);
-  font-weight: 700;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .hero-brand { gap: 14px; }
+  .hero-brand-glyph { width: 56px; height: 56px; }
+  .hero-brand-text { font-size: 56px; }
+  .hero-title { font-size: 26px; }
 }
 
 .hero-lede {

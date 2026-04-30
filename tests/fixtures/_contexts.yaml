@@ -1,0 +1,22 @@
+version: 1
+defaults:
+  context: personal
+contexts:
+  work: {}
+  personal: {}
+resolvers:
+  gmail:
+    - { match: { from: "@itn\\.com$" }, context: work }
+    - { match: { from: "@gmail\\.com$" }, context: personal }
+  gcal:
+    - { match: { calendar_id: "^user@itn\\.com$" }, context: work }
+    - { match: { calendar_id: "^user@gmail\\.com$" }, context: personal }
+  gdrive:
+    - { match: { path_glob: "**/work/**" }, context: work }
+    - { match: { path_glob: "**" }, context: personal }
+  slack:
+    - { match: { workspace_id: "TWORK01" }, context: work }
+    - { match: { workspace_id: "TPERS99" }, context: personal }
+  claude:
+    - { match: { path_glob: "**/work/**" }, context: work }
+    - { match: { path_glob: "**" }, context: personal }

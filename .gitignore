@@ -3,6 +3,10 @@
 *.log
 .cache/
 .tmp/
-tests/
 
 site/.wrangler/
+
+# remotion build artifacts and deps
+remotion/node_modules/
+remotion/out/
+node_modules/
