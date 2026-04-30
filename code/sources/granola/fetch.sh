@@ -127,23 +127,44 @@ def infer_context(doc, work_email):
     if work_email in creator.lower(): return 'work'
     return 'personal'
 
+def attendee_names(doc):
+    people=doc.get('people') or {}
+    names=[]
+    for att in (people.get('attendees') or []):
+        det=att.get('details') or {}
+        person=det.get('person') or {}
+        name=(person.get('name') or {}).get('fullName','') or att.get('email','')
+        if name: names.append(name)
+    creator_det=(people.get('creator') or {}).get('details') or {}
+    creator_person=creator_det.get('person') or {}
+    creator_name=(creator_person.get('name') or {}).get('fullName','') or (people.get('creator') or {}).get('email','')
+    if creator_name: names.append(creator_name)
+    return list(set(names))
+
 def body(doc):
     nm=doc.get('notes_markdown','') or ''
     if nm.strip(): return nm[:2000]
     sm=doc.get('summary','') or ''
     if sm: return sm[:2000]
-    # Chapters
     for ch in (doc.get('chapters') or []):
         c=ch.get('content','') or ''
         if c: return c[:2000]
-    return ''
+    # Fallback: synthesize from meeting metadata (title + attendees + cal description)
+    title=doc.get('title','') or ''
+    cal=doc.get('google_calendar_event') or {}
+    cal_desc=cal.get('description','') or ''
+    names=attendee_names(doc)
+    parts=[f'Meeting: {title}']
+    if names: parts.append(f'Attendees: {\", \".join(names)}')
+    if cal_desc: parts.append(f'Description: {cal_desc[:500]}')
+    return '\n'.join(parts) if len(parts) > 1 else ''
 
 out=[]
 for doc in docs:
     ts=to_epoch(doc.get('created_at',''))
     if ts < cutoff: continue
     b=body(doc)
-    if not b: continue  # skip empty meetings
+    if not b: continue  # skip if no metadata at all
     out.append({
         'id': doc.get('id',''),
         'title': doc.get('title','') or 'Untitled meeting',
