@@ -7,7 +7,9 @@
   "scripts": {
     "start": "remotion studio",
     "build": "remotion render NanobrainDemo out/demo.mp4 --codec h264 --crf 18",
+    "build:square": "remotion render NanobrainDemoSquare out/demo-square.mp4 --codec h264 --crf 18",
     "build:gif": "remotion render NanobrainDemo out/demo.mp4 --codec h264 --crf 16 && rm -rf out/frames && mkdir -p out/frames && ffmpeg -y -i out/demo.mp4 -vf 'fps=18,scale=960:-1:flags=lanczos' out/frames/%04d.png && gifski out/frames/*.png -o ../assets/demo.gif --width 960 --fps 18 --quality 70",
+    "build:all": "npm run build && npm run build:square",
     "preview": "remotion preview"
   },
   "dependencies": {
