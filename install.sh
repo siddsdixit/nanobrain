@@ -67,19 +67,38 @@ if [ ! -f "$BRAIN_DIR/brain/_contexts.yaml" ]; then
   BRAIN_DIR="$BRAIN_DIR" bash "$FRAMEWORK_DIR/code/skills/brain-init/wizard.sh" --brain-dir "$BRAIN_DIR" $init_args
 fi
 
-# 2b. Detect configured MCPs and initialize sources (unless --skip-sources).
+# 2b. Detect configured sources and initialize (unless --skip-sources).
 if [ "$SKIP_SOURCES" -eq 1 ]; then
   echo "[install] source detection skipped (--skip-sources)"
 else
   echo
-  echo "[install] Checking for configured MCP sources..."
-  for source in gmail gcal gdrive slack granola; do
-    if bash "$FRAMEWORK_DIR/code/lib/detect_mcp.sh" "$source" 2>/dev/null; then
-      echo "[install] $source detected. Running brain-add $source..."
+  echo "[install] Checking for configured sources..."
+
+  # Source and export brain .env so detect_mcp.sh and child processes see stored keys.
+  if [ -f "$BRAIN_DIR/.env" ]; then set -a; . "$BRAIN_DIR/.env"; set +a; fi
+
+  for source in granola gmail gcal gdrive slack; do
+    if BRAIN_DIR="$BRAIN_DIR" bash "$FRAMEWORK_DIR/code/lib/detect_mcp.sh" "$source" 2>/dev/null; then
+      echo "[install] $source: detected — running brain-add..."
       BRAIN_DIR="$BRAIN_DIR" NANOBRAIN_DIR="$BRAIN_DIR/.nanobrain" \
         bash "$BRAIN_DIR/.nanobrain/code/skills/brain-add/add.sh" "$source" || true
+    elif [ "$source" = "granola" ]; then
+      echo
+      echo "[install] Granola not configured."
+      printf "  Do you have a Granola API key? (y/N): "
+      read -r ans
+      case "$ans" in
+        [yY]*)
+          BRAIN_DIR="$BRAIN_DIR" NANOBRAIN_DIR="$BRAIN_DIR/.nanobrain" \
+            bash "$BRAIN_DIR/.nanobrain/code/skills/brain-add/add.sh" granola || true
+          ;;
+        *)
+          echo "  Skipping. Run '/brain-add granola' anytime after getting a key."
+          echo "  (Settings → API in the Granola desktop app)"
+          ;;
+      esac
     else
-      echo "[install] $source: not configured. Run '/brain-add $source' after connecting it."
+      echo "[install] $source: MCP not connected. Run '/brain-add $source' after connecting claude.ai → Integrations."
     fi
   done
 fi

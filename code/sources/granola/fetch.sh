@@ -13,8 +13,19 @@ BRAIN_DIR="${BRAIN_DIR:-$HOME/brain}"
 API="https://public-api.granola.ai"
 
 KEY="${NANOBRAIN_GRANOLA_KEY:-}"
+
+# Fallback 1: brain .env file
+if [ -z "$KEY" ] && [ -f "$BRAIN_DIR/.env" ]; then
+  KEY=$(grep "^NANOBRAIN_GRANOLA_KEY=" "$BRAIN_DIR/.env" 2>/dev/null | cut -d= -f2- | tr -d '[:space:]') || true
+fi
+
+# Fallback 2: macOS Keychain
+if [ -z "$KEY" ] && command -v security >/dev/null 2>&1; then
+  KEY=$(security find-generic-password -s "nanobrain-granola-api-key" -w 2>/dev/null || true)
+fi
+
 if [ -z "$KEY" ]; then
-  echo "[granola] NANOBRAIN_GRANOLA_KEY not set" >&2
+  echo "[granola] NANOBRAIN_GRANOLA_KEY not set (env, .env, or Keychain)" >&2
   printf '[]'
   exit 0
 fi

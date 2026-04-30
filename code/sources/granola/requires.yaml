@@ -1,14 +1,16 @@
 source: granola
-auth: local_jwt
-auth_file: "~/Library/Application Support/Granola/supabase.json"
+auth: api_key
+auth_env: NANOBRAIN_GRANOLA_KEY
+auth_file: brain/.env
+api_base: https://public-api.granola.ai
 windows:
   work: 30
   personal: 30
 fetch:
-  via: local_jwt | NANOBRAIN_GRANOLA_STUB
+  via: NANOBRAIN_GRANOLA_STUB | api_key
 schedule:
   cron_minutes: 60
 notes: >
-  No API key required. Reads WorkOS JWT from Granola's local app state.
-  Granola must be installed and have been launched at least once.
-  Token is refreshed automatically by the running app.
+  Requires grn_ API key from Granola desktop app: Settings → API → Create new key.
+  Key is stored in <brain_dir>/.env (chmod 600, gitignored).
+  API only returns notes with a generated AI summary.

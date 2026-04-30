@@ -17,14 +17,25 @@ src="${1:-}"
 
 dbg() { [ "${NANOBRAIN_DEBUG:-0}" = "1" ] && echo "[detect_mcp] $*" >&2 || true; }
 
-# Granola uses local JWT auth, not MCP — check separately.
+# Granola uses a grn_ API key, not MCP — check separately.
 if [ "$src" = "granola" ]; then
-  granola_state="$HOME/Library/Application Support/Granola/supabase.json"
-  if [ -f "$granola_state" ]; then
-    dbg "granola: local state found"
-    exit 0
+  # 1. Env var.
+  if [ -n "${NANOBRAIN_GRANOLA_KEY:-}" ]; then
+    dbg "granola: key in environment"; exit 0
   fi
-  dbg "granola: app not installed"
+  # 2. Brain .env file.
+  brain_env="${BRAIN_DIR:-$HOME/brain}/.env"
+  if [ -f "$brain_env" ] && grep -q "NANOBRAIN_GRANOLA_KEY" "$brain_env" 2>/dev/null; then
+    dbg "granola: key found in .env"; exit 0
+  fi
+  # 3. macOS Keychain.
+  if command -v security >/dev/null 2>&1; then
+    key=$(security find-generic-password -s "nanobrain-granola-api-key" -w 2>/dev/null || true)
+    if [ -n "$key" ]; then
+      dbg "granola: key found in Keychain"; exit 0
+    fi
+  fi
+  dbg "granola: no API key found"
   exit 1
 fi
 
